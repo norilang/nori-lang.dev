@@ -24,7 +24,7 @@ Before installing Nori, make sure you have the following:
 3. Paste the following git URL:
 
    ```
-   https://github.com/nori-lang/nori.git?path=Packages/dev.nori.compiler
+   https://github.com/norilang/nori.git?path=Packages/dev.nori.compiler
    ```
 
 4. Click **Add**. The Nori package will now appear in your package list.
@@ -41,7 +41,7 @@ If you prefer to add the package directly inside Unity:
 4. Paste the following URL:
 
    ```
-   https://github.com/nori-lang/nori.git?path=Packages/dev.nori.compiler
+   https://github.com/norilang/nori.git?path=Packages/dev.nori.compiler
    ```
 
 5. Click **Add**. Unity will download and install the Nori compiler package.

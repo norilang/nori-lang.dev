@@ -13,11 +13,11 @@ export default defineConfig({
         replacesTitle: false,
       },
       social: {
-        github: 'https://github.com/nori-lang/nori',
+        github: 'https://github.com/norilang/nori',
       },
       customCss: ['./src/styles/custom.css'],
       editLink: {
-        baseUrl: 'https://github.com/nori-lang/nori/edit/main/docs-site/',
+        baseUrl: 'https://github.com/norilang/nori-lang.dev/edit/main/',
       },
       sidebar: [
         {

@@ -62,4 +62,4 @@ Every Nori compiler error includes an error code that links to a detailed explan
 |------|-------|-------------|
 | [W0010](/errors/generated/w0010/) | Unused variable | Variable declared but never used |
 
-If you encounter an error not listed here, please [file an issue](https://github.com/nori-lang/nori/issues).
+If you encounter an error not listed here, please [file an issue](https://github.com/norilang/nori/issues).
