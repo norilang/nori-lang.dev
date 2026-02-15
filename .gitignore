@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.astro/
+src/content/docs/errors/generated/
+src/content/docs/api/generated/
+
+# Unity meta files (not needed outside Unity project)
+*.meta

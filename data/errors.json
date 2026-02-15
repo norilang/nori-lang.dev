@@ -1,0 +1,202 @@
+[
+  {
+    "code": "E0001",
+    "title": "Unterminated string literal",
+    "category": "lexer",
+    "explanation": "A string was opened with a double-quote character but the lexer reached the end of the line or file without finding a matching closing quote. This typically happens when a closing quote is accidentally omitted, or when a string contains an unescaped quote that prematurely ends the literal. The Nori lexer requires all string literals to be terminated on the same line they are opened.",
+    "suggestion": "Add a closing '\"' to terminate the string.",
+    "bad_example": "let greeting: string = \"hello world",
+    "good_example": "let greeting: string = \"hello world\"",
+    "see_also": ["language/types", "language/expressions"]
+  },
+  {
+    "code": "E0002",
+    "title": "Unterminated block comment",
+    "category": "lexer",
+    "explanation": "A block comment was opened with '/*' but the lexer reached the end of the file without finding a matching '*/'. Nori supports nested block comments, so every opening '/*' requires its own corresponding '*/'. If you have nested block comments, make sure each level of nesting is properly closed.",
+    "suggestion": "Add a closing '*/' to terminate the block comment. If comments are nested, ensure every '/*' has a matching '*/'.",
+    "bad_example": "/* This comment\n   is never closed\nlet x: int = 5",
+    "good_example": "/* This comment\n   is properly closed */\nlet x: int = 5",
+    "see_also": []
+  },
+  {
+    "code": "E0003",
+    "title": "Unexpected character",
+    "category": "lexer",
+    "explanation": "The lexer encountered a character that is not valid in Nori source code. Nori's lexer recognizes a specific set of characters including letters, digits, operators, punctuation, and whitespace. Characters outside this set, such as certain Unicode symbols or non-standard punctuation, are not recognized and cause this error.",
+    "suggestion": "Remove or replace the unexpected character with a valid Nori token.",
+    "bad_example": "let x: int = 5 @\nlet y: int = 10",
+    "good_example": "let x: int = 5\nlet y: int = 10",
+    "see_also": []
+  },
+  {
+    "code": "E0010",
+    "title": "Unexpected token at top level",
+    "category": "parser",
+    "explanation": "A .nori file can only contain top-level declarations: variable declarations (let, pub let, sync), event handlers (on), custom event declarations (event), and function definitions (fn). The parser found a token that does not begin any of these declaration forms. This often happens when a statement that belongs inside a function or event body is accidentally placed at the top level.",
+    "suggestion": "Ensure your top-level code starts with one of: let, pub, sync, on, event, or fn. Move any statements into an event handler or function body.",
+    "bad_example": "x = 5\nlog(\"hello\")",
+    "good_example": "let x: int = 5\n\non Start {\n    log(\"hello\")\n}",
+    "see_also": ["language", "language/variables", "language/events", "language/functions"]
+  },
+  {
+    "code": "E0011",
+    "title": "Expected 'let' after 'pub'",
+    "category": "parser",
+    "explanation": "The 'pub' keyword is a visibility modifier that can only be applied to variable declarations. It marks a variable as public so it appears in the Unity Inspector, allowing world creators to configure values without editing code. The parser found 'pub' followed by something other than 'let', which is not valid syntax.",
+    "suggestion": "Follow 'pub' with 'let' to declare a public variable: pub let variableName: type = value",
+    "bad_example": "pub myVar: int = 5",
+    "good_example": "pub let myVar: int = 5",
+    "see_also": ["language/variables", "language/networking"]
+  },
+  {
+    "code": "E0012",
+    "title": "Invalid sync mode",
+    "category": "parser",
+    "explanation": "The 'sync' keyword declares a networked variable that is synchronized across all players in a VRChat world. It must be followed by an interpolation mode that tells VRChat how to handle updates between sync intervals. The three valid modes are 'none' (value updates instantly on each sync tick), 'linear' (linearly interpolated between ticks), and 'smooth' (smoothly interpolated for fluid motion).",
+    "suggestion": "Use a valid sync mode: sync none, sync linear, or sync smooth.",
+    "bad_example": "sync fast score: int = 0",
+    "good_example": "sync none score: int = 0",
+    "see_also": ["language/networking", "language/variables"]
+  },
+  {
+    "code": "E0020",
+    "title": "Invalid send target",
+    "category": "parser",
+    "explanation": "The 'send' statement dispatches a custom network event to remote Udon behaviours. The target must be either 'All' (broadcast to every player's instance of this UdonBehaviour) or 'Owner' (send only to the player who owns the GameObject). These are the only two targets supported by VRChat's networking system. Other target names are not recognized.",
+    "suggestion": "Use 'All' or 'Owner' as the send target.",
+    "bad_example": "event ScoreUpdate { }\n\non Interact {\n    send ScoreUpdate to Everyone\n}",
+    "good_example": "event ScoreUpdate { }\n\non Interact {\n    send ScoreUpdate to All\n}",
+    "see_also": ["language/custom-events", "language/networking"]
+  },
+  {
+    "code": "E0030",
+    "title": "Expected expression",
+    "category": "parser",
+    "explanation": "The parser expected to find an expression (a value, variable reference, function call, method call, or sub-expression) but encountered a token that cannot begin an expression. This commonly occurs when an operator is missing an operand, parentheses are mismatched, or a statement is incomplete. Expressions in Nori include literals, identifiers, binary/unary operations, member access, and call expressions.",
+    "suggestion": "Check for missing operands, misplaced operators, or incomplete statements.",
+    "bad_example": "on Start {\n    let x: int = * 5\n}",
+    "good_example": "on Start {\n    let x: int = 2 * 5\n}",
+    "see_also": ["language/expressions", "language/types"]
+  },
+  {
+    "code": "E0031",
+    "title": "Unexpected token",
+    "category": "parser",
+    "explanation": "The parser encountered a token that does not fit the expected syntax at this position. This is a general syntax error that can occur in many contexts, such as a missing comma, an extra bracket, or a keyword used where an expression or statement was expected. The parser was in the middle of recognizing a particular syntactic construct and found a token it cannot incorporate.",
+    "suggestion": "Review the syntax near the reported location. Check for misplaced punctuation, missing delimiters, or incorrect keyword usage.",
+    "bad_example": "on Start {\n    let x: int = 5 5\n}",
+    "good_example": "on Start {\n    let x: int = 5 + 5\n}",
+    "see_also": ["language"]
+  },
+  {
+    "code": "E0032",
+    "title": "Expected identifier",
+    "category": "parser",
+    "explanation": "The parser expected a name (identifier) at this position but found a different token. Identifiers are required in variable declarations, function names, parameter names, event names, and member access expressions. A valid identifier starts with a letter or underscore and can contain letters, digits, and underscores.",
+    "suggestion": "Provide a valid identifier. Names must start with a letter or underscore and contain only letters, digits, and underscores.",
+    "bad_example": "let 123abc: int = 5",
+    "good_example": "let myVar: int = 5",
+    "see_also": ["language/variables", "language/functions"]
+  },
+  {
+    "code": "E0040",
+    "title": "Type mismatch",
+    "category": "semantic",
+    "explanation": "The types involved in this expression or assignment are not compatible. Nori's type system maps directly to the Udon VM's concrete .NET types, and implicit conversions are limited to int-to-float, int-to-double, and float-to-double numeric widening. All other type conversions must be done explicitly. This error commonly appears when assigning a value of one type to a variable of a different type, or when using operators with incompatible operand types.",
+    "suggestion": "Ensure both sides of the operation or assignment have compatible types. Use explicit conversion methods if needed.",
+    "bad_example": "let name: string = \"hello\"\nlet count: int = name",
+    "good_example": "let name: string = \"hello\"\nlet count: int = 5",
+    "see_also": ["language/types", "language/expressions"]
+  },
+  {
+    "code": "E0042",
+    "title": "Generic types are not supported",
+    "category": "semantic",
+    "explanation": "Udon's type system is built on concrete .NET types that are individually whitelisted in the extern system. .NET generic types such as List<T>, Dictionary<K,V>, and Nullable<T> are not part of the Udon extern whitelist and cannot be instantiated or used. This is a fundamental limitation of the Udon VM runtime, not a Nori compiler restriction. The Udon VM only supports a fixed set of non-generic types.",
+    "suggestion": "Use typed arrays instead of generic collections. For example, use int[], string[], or GameObject[] instead of List<int>, List<string>, or List<GameObject>.",
+    "bad_example": "let scores: List<int> = List<int>()",
+    "good_example": "let scores: int[] = int[](10)",
+    "see_also": ["language/types", "language/limitations", "internals/udon-vm"]
+  },
+  {
+    "code": "E0070",
+    "title": "Undefined variable",
+    "category": "scope",
+    "explanation": "The compiler could not find a variable with this name in the current scope or any enclosing scope. In Nori, all variables must be explicitly declared with 'let' (or 'pub let' or 'sync') before they can be referenced. This error usually indicates a typo in the variable name, a missing declaration, or an attempt to use a variable outside of the scope where it was declared.",
+    "suggestion": "Check for typos in the variable name. If the variable has not been declared, add a 'let' declaration before its first use.",
+    "bad_example": "on Start {\n    log(\"{greeting}\")\n}",
+    "good_example": "let greeting: string = \"hello\"\n\non Start {\n    log(\"{greeting}\")\n}",
+    "see_also": ["language/variables"]
+  },
+  {
+    "code": "E0071",
+    "title": "Undefined function",
+    "category": "scope",
+    "explanation": "The compiler could not find a function with this name. All user-defined functions in Nori must be declared with 'fn' at the top level before they can be called. This error is raised when a call expression references a name that is not a known function, built-in, or extern method. Common causes include typos in the function name, forgetting to define the function, or accidentally using a function name that does not exist.",
+    "suggestion": "Check for typos in the function name. If the function has not been defined, add an 'fn' declaration.",
+    "bad_example": "on Start {\n    greet()\n}",
+    "good_example": "fn greet() {\n    log(\"hello\")\n}\n\non Start {\n    greet()\n}",
+    "see_also": ["language/functions"]
+  },
+  {
+    "code": "E0100",
+    "title": "Recursion detected",
+    "category": "control-flow",
+    "explanation": "The Udon VM does not have a call stack, so recursive function calls are fundamentally impossible. Nori compiles function calls using a single return-address heap variable per function and a JUMP_INDIRECT instruction, which means a function cannot call itself (or be part of a mutual call cycle) without overwriting the return address and losing the ability to return correctly. The compiler performs static call-graph analysis and reports this error when it detects any cycle.",
+    "suggestion": "Rewrite the recursive algorithm using iterative loops (while or for). Store intermediate state in local variables instead of relying on the call stack.",
+    "bad_example": "fn factorial(n: int) -> int {\n    if n <= 1 {\n        return 1\n    }\n    return n * factorial(n - 1)\n}",
+    "good_example": "fn factorial(n: int) -> int {\n    let result: int = 1\n    let i: int = n\n    while i > 1 {\n        result = result * i\n        i = i - 1\n    }\n    return result\n}",
+    "see_also": ["language/functions", "language/control-flow", "language/limitations", "internals/udon-vm"]
+  },
+  {
+    "code": "E0130",
+    "title": "Method not found",
+    "category": "extern",
+    "explanation": "The specified method was not found on the given type in the extern catalog, or no overload of the method matches the provided argument types. Nori accesses Unity and VRChat functionality through Udon's extern system, which exposes a whitelisted subset of .NET methods. If a method exists in the Unity API but is not in the Udon whitelist, it cannot be called from Nori. This error also occurs when argument types do not match any available overload.",
+    "suggestion": "Verify the method name and argument types. Check the API reference for available methods on the type. If the method is not listed, it may not be exposed by the Udon extern whitelist.",
+    "bad_example": "on Start {\n    let obj: GameObject = gameObject\n    obj.SetName(\"test\")\n}",
+    "good_example": "on Start {\n    let obj: GameObject = gameObject\n    obj.SetActive(true)\n}",
+    "see_also": ["language/types", "language/expressions", "language/limitations"]
+  },
+  {
+    "code": "E0131",
+    "title": "Ambiguous overload",
+    "category": "extern",
+    "explanation": "Multiple overloads of the method match the provided arguments equally well, and the compiler cannot determine which one to call. The overload resolution process first tries exact type matches, then tries matches with implicit widening conversions (int to float, int to double, float to double), and finally considers object-typed parameters. If two or more overloads tie at the same priority level, the call is ambiguous.",
+    "suggestion": "Add explicit type conversions to one or more arguments to disambiguate which overload you intend to call.",
+    "bad_example": "on Start {\n    let x: int = 5\n    let result: float = Mathf.Min(x, x)\n}",
+    "good_example": "on Start {\n    let x: float = 5.0\n    let result: float = Mathf.Min(x, x)\n}",
+    "see_also": ["language/types", "language/expressions"]
+  },
+  {
+    "code": "E0132",
+    "title": "Property not writable",
+    "category": "extern",
+    "explanation": "The property you are trying to assign to is read-only and does not have a setter in the Udon extern whitelist. Many Unity properties are exposed as read-only through the Udon VM, even if they have setters in the full Unity API. This is an Udon restriction, not a Nori limitation. The compiler checked the extern catalog and confirmed that no setter exists for this property.",
+    "suggestion": "Check if a different property or method should be used to achieve the desired effect. Consult the API reference for writable alternatives.",
+    "bad_example": "on Start {\n    let pos: Vector3 = transform.position\n    pos.magnitude = 5.0\n}",
+    "good_example": "on Start {\n    let pos: Vector3 = transform.position\n    let mag: float = pos.magnitude\n}",
+    "see_also": ["language/expressions", "language/limitations"]
+  },
+  {
+    "code": "E0133",
+    "title": "Enum value not found",
+    "category": "extern",
+    "explanation": "The specified enum value does not exist on the given enum type. Nori supports the enum types that are exposed through the Udon extern catalog, and enum values are accessed using dot notation on the type name. This error occurs when the value name after the dot does not match any known member of the enum. Common causes include typos or referencing a value that exists in the full .NET API but is not whitelisted in Udon.",
+    "suggestion": "Check the spelling of the enum value name. Refer to the API reference for the list of available values on this enum type.",
+    "bad_example": "on Start {\n    let space: Space = Space.Local\n    transform.Rotate(Vector3.up, 90.0, space)\n}",
+    "good_example": "on Start {\n    let space: Space = Space.Self\n    transform.Rotate(Vector3.up, 90.0, space)\n}",
+    "see_also": ["language/types"]
+  },
+  {
+    "code": "W0010",
+    "title": "Unused variable",
+    "category": "warning",
+    "explanation": "A variable was declared with 'let' but is never referenced anywhere in the program. Unused variables add clutter to the code and consume heap space in the Udon VM. While this is a warning and does not prevent compilation, it often indicates dead code or a variable that was intended to be used but was forgotten. Each variable declaration results in a heap allocation in the compiled output.",
+    "suggestion": "Remove the unused variable declaration, or use the variable in your code.",
+    "bad_example": "let score: int = 0\n\non Start {\n    log(\"game started\")\n}",
+    "good_example": "let score: int = 0\n\non Start {\n    log(\"score is {score}\")\n}",
+    "see_also": ["language/variables"]
+  }
+]

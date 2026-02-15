@@ -1,0 +1,24 @@
+/* Nori documentation custom styles */
+
+:root {
+  --sl-color-accent-low: #4c1d95;
+  --sl-color-accent: #7c3aed;
+  --sl-color-accent-high: #c4b5fd;
+  --sl-font-system-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+}
+
+:root[data-theme='light'] {
+  --sl-color-accent-low: #ede9fe;
+  --sl-color-accent: #7c3aed;
+  --sl-color-accent-high: #4c1d95;
+}
+
+/* Error code badges */
+.error-code {
+  font-family: var(--sl-font-system-mono);
+  font-weight: 600;
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+  background: var(--sl-color-accent-low);
+  color: var(--sl-color-accent-high);
+}

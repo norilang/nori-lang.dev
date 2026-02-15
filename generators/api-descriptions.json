@@ -1,0 +1,923 @@
+{
+  "Transform": {
+    "udonOwner": "UnityEngineTransform",
+    "description": "Represents the position, rotation, and scale of a GameObject in 3D space. Nearly every VRChat interaction involves reading or modifying a Transform to move objects, orient players, or build dynamic world elements.",
+    "properties": {
+      "position": {
+        "description": "World-space position of the object as a Vector3.",
+        "example": "let pos: Vector3 = transform.position"
+      },
+      "rotation": {
+        "description": "World-space rotation of the object as a Quaternion.",
+        "example": "transform.rotation = Quaternion.Euler(0.0, 90.0, 0.0)"
+      },
+      "localPosition": {
+        "description": "Position relative to the parent Transform.",
+        "example": "transform.localPosition = Vector3.zero"
+      },
+      "localRotation": {
+        "description": "Rotation relative to the parent Transform.",
+        "example": "transform.localRotation = Quaternion.identity"
+      },
+      "localScale": {
+        "description": "Scale relative to the parent Transform.",
+        "example": "transform.localScale = Vector3.one"
+      },
+      "forward": {
+        "description": "The blue axis (Z+) direction of the object in world space.",
+        "example": "let dir: Vector3 = transform.forward"
+      },
+      "right": {
+        "description": "The red axis (X+) direction of the object in world space.",
+        "example": "let side: Vector3 = transform.right"
+      },
+      "up": {
+        "description": "The green axis (Y+) direction of the object in world space.",
+        "example": "let upDir: Vector3 = transform.up"
+      },
+      "parent": {
+        "description": "The parent Transform of this object, or null if it is a root object.",
+        "example": "let parentTransform: Transform = transform.parent"
+      }
+    },
+    "methods": {
+      "Rotate": {
+        "description": "Applies a rotation around the given axes in degrees.",
+        "example": "transform.Rotate(0.0, 45.0, 0.0)"
+      },
+      "Translate": {
+        "description": "Moves the transform by the given offset in its local or world space.",
+        "example": "transform.Translate(0.0, 1.0, 0.0)"
+      },
+      "LookAt": {
+        "description": "Rotates the transform so its forward vector points at a target position.",
+        "example": "transform.LookAt(targetTransform)"
+      },
+      "SetParent": {
+        "description": "Assigns a new parent Transform, optionally preserving world position.",
+        "example": "transform.SetParent(newParent)"
+      },
+      "GetChild": {
+        "description": "Returns the child Transform at the given index.",
+        "example": "let child: Transform = transform.GetChild(0)"
+      },
+      "Find": {
+        "description": "Finds a child Transform by name path. Returns null if not found.",
+        "example": "let door: Transform = transform.Find(\"Room/Door\")"
+      }
+    }
+  },
+  "GameObject": {
+    "udonOwner": "UnityEngineGameObject",
+    "description": "The fundamental object in every Unity scene. In VRChat worlds, GameObjects hold all components like meshes, colliders, audio sources, and Udon behaviours, and toggling them on or off is one of the most common operations.",
+    "properties": {
+      "activeSelf": {
+        "description": "Whether this GameObject is locally active (ignores parent state).",
+        "example": "let isOn: bool = gameObject.activeSelf"
+      },
+      "name": {
+        "description": "The name of the GameObject as shown in the hierarchy.",
+        "example": "log(\"Object name: {gameObject.name}\")"
+      },
+      "tag": {
+        "description": "The tag assigned to this GameObject, used for categorization.",
+        "example": "let t: string = gameObject.tag"
+      },
+      "layer": {
+        "description": "The layer index this GameObject is on, used for physics and rendering masks.",
+        "example": "let l: int = gameObject.layer"
+      },
+      "transform": {
+        "description": "The Transform component attached to this GameObject.",
+        "example": "let pos: Vector3 = gameObject.transform.position"
+      }
+    },
+    "methods": {
+      "SetActive": {
+        "description": "Enables or disables the GameObject in the scene.",
+        "example": "gameObject.SetActive(true)"
+      },
+      "GetComponent": {
+        "description": "Returns a component of the given type attached to this GameObject.",
+        "example": "let rb: Rigidbody = gameObject.GetComponent()"
+      },
+      "Find": {
+        "description": "Static method that finds a GameObject by name in the scene. Expensive; cache the result.",
+        "example": "let obj: GameObject = GameObject.Find(\"SpawnPoint\")"
+      },
+      "FindWithTag": {
+        "description": "Static method that finds a single active GameObject with the given tag.",
+        "example": "let obj: GameObject = GameObject.FindWithTag(\"Respawn\")"
+      },
+      "CompareTag": {
+        "description": "Returns true if the GameObject's tag matches the given string. More efficient than comparing tag strings directly.",
+        "example": "let isPlayer: bool = gameObject.CompareTag(\"Player\")"
+      }
+    }
+  },
+  "Vector3": {
+    "udonOwner": "UnityEngineVector3",
+    "description": "A three-component vector used for positions, directions, and scales in 3D space. Vector3 is the workhorse type in VRChat worlds for everything from teleporting players to computing directions between objects.",
+    "properties": {
+      "x": {
+        "description": "The X (horizontal / red axis) component.",
+        "example": "let horizontal: float = pos.x"
+      },
+      "y": {
+        "description": "The Y (vertical / green axis) component.",
+        "example": "let height: float = pos.y"
+      },
+      "z": {
+        "description": "The Z (depth / blue axis) component.",
+        "example": "let depth: float = pos.z"
+      },
+      "magnitude": {
+        "description": "The length of this vector.",
+        "example": "let speed: float = velocity.magnitude"
+      },
+      "normalized": {
+        "description": "Returns this vector with a magnitude of 1, preserving direction.",
+        "example": "let dir: Vector3 = offset.normalized"
+      },
+      "zero": {
+        "description": "Static. Shorthand for Vector3(0, 0, 0).",
+        "example": "transform.localPosition = Vector3.zero"
+      },
+      "one": {
+        "description": "Static. Shorthand for Vector3(1, 1, 1).",
+        "example": "transform.localScale = Vector3.one"
+      },
+      "up": {
+        "description": "Static. Shorthand for Vector3(0, 1, 0).",
+        "example": "let upward: Vector3 = Vector3.up"
+      },
+      "down": {
+        "description": "Static. Shorthand for Vector3(0, -1, 0).",
+        "example": "let downward: Vector3 = Vector3.down"
+      },
+      "forward": {
+        "description": "Static. Shorthand for Vector3(0, 0, 1).",
+        "example": "let fwd: Vector3 = Vector3.forward"
+      },
+      "back": {
+        "description": "Static. Shorthand for Vector3(0, 0, -1).",
+        "example": "let bk: Vector3 = Vector3.back"
+      },
+      "left": {
+        "description": "Static. Shorthand for Vector3(-1, 0, 0).",
+        "example": "let l: Vector3 = Vector3.left"
+      },
+      "right": {
+        "description": "Static. Shorthand for Vector3(1, 0, 0).",
+        "example": "let r: Vector3 = Vector3.right"
+      }
+    },
+    "methods": {
+      "Distance": {
+        "description": "Static. Returns the distance between two points.",
+        "example": "let dist: float = Vector3.Distance(a, b)"
+      },
+      "Lerp": {
+        "description": "Static. Linearly interpolates between two vectors by t (clamped 0-1).",
+        "example": "let mid: Vector3 = Vector3.Lerp(start, end, 0.5)"
+      },
+      "Slerp": {
+        "description": "Static. Spherically interpolates between two vectors, useful for rotating directions smoothly.",
+        "example": "let dir: Vector3 = Vector3.Slerp(from, to, t)"
+      },
+      "Cross": {
+        "description": "Static. Returns the cross product of two vectors (perpendicular vector).",
+        "example": "let normal: Vector3 = Vector3.Cross(a, b)"
+      },
+      "Dot": {
+        "description": "Static. Returns the dot product of two vectors. Positive when facing similar directions.",
+        "example": "let alignment: float = Vector3.Dot(forward, toTarget)"
+      },
+      "Normalize": {
+        "description": "Static. Returns the given vector with magnitude 1.",
+        "example": "let unit: Vector3 = Vector3.Normalize(direction)"
+      },
+      "Angle": {
+        "description": "Static. Returns the angle in degrees between two vectors.",
+        "example": "let angle: float = Vector3.Angle(a, b)"
+      },
+      "MoveTowards": {
+        "description": "Static. Moves a point toward a target, capped at a maximum distance per call.",
+        "example": "let next: Vector3 = Vector3.MoveTowards(current, target, speed * Time.deltaTime)"
+      },
+      "Scale": {
+        "description": "Static. Multiplies two vectors component-wise.",
+        "example": "let scaled: Vector3 = Vector3.Scale(size, multiplier)"
+      }
+    }
+  },
+  "Vector2": {
+    "udonOwner": "UnityEngineVector2",
+    "description": "A two-component vector for 2D positions, UV coordinates, and UI layouts. In VRChat worlds it is commonly used for screen-space calculations, texture offsets, and input axes.",
+    "properties": {
+      "x": {
+        "description": "The X component.",
+        "example": "let h: float = input.x"
+      },
+      "y": {
+        "description": "The Y component.",
+        "example": "let v: float = input.y"
+      },
+      "magnitude": {
+        "description": "The length of this vector.",
+        "example": "let len: float = vec.magnitude"
+      },
+      "normalized": {
+        "description": "Returns this vector with a magnitude of 1.",
+        "example": "let dir: Vector2 = vec.normalized"
+      },
+      "zero": {
+        "description": "Static. Shorthand for Vector2(0, 0).",
+        "example": "let origin: Vector2 = Vector2.zero"
+      },
+      "one": {
+        "description": "Static. Shorthand for Vector2(1, 1).",
+        "example": "let unit: Vector2 = Vector2.one"
+      },
+      "up": {
+        "description": "Static. Shorthand for Vector2(0, 1).",
+        "example": "let upDir: Vector2 = Vector2.up"
+      },
+      "down": {
+        "description": "Static. Shorthand for Vector2(0, -1).",
+        "example": "let downDir: Vector2 = Vector2.down"
+      },
+      "left": {
+        "description": "Static. Shorthand for Vector2(-1, 0).",
+        "example": "let l: Vector2 = Vector2.left"
+      },
+      "right": {
+        "description": "Static. Shorthand for Vector2(1, 0).",
+        "example": "let r: Vector2 = Vector2.right"
+      }
+    },
+    "methods": {
+      "Distance": {
+        "description": "Static. Returns the distance between two 2D points.",
+        "example": "let dist: float = Vector2.Distance(a, b)"
+      },
+      "Lerp": {
+        "description": "Static. Linearly interpolates between two 2D vectors by t (clamped 0-1).",
+        "example": "let mid: Vector2 = Vector2.Lerp(start, end, 0.5)"
+      },
+      "Dot": {
+        "description": "Static. Returns the dot product of two 2D vectors.",
+        "example": "let d: float = Vector2.Dot(a, b)"
+      },
+      "Angle": {
+        "description": "Static. Returns the unsigned angle in degrees between two 2D vectors.",
+        "example": "let angle: float = Vector2.Angle(a, b)"
+      },
+      "MoveTowards": {
+        "description": "Static. Moves a 2D point toward a target, capped at a maximum step.",
+        "example": "let next: Vector2 = Vector2.MoveTowards(current, target, step)"
+      }
+    }
+  },
+  "Quaternion": {
+    "udonOwner": "UnityEngineQuaternion",
+    "description": "Represents a rotation in 3D space without gimbal lock. In VRChat worlds, Quaternions are used to smoothly rotate objects, orient players, and interpolate between facing directions.",
+    "properties": {
+      "eulerAngles": {
+        "description": "The rotation expressed as Euler angles in degrees (pitch, yaw, roll).",
+        "example": "let angles: Vector3 = transform.rotation.eulerAngles"
+      },
+      "x": {
+        "description": "The X component of the quaternion (not an angle).",
+        "example": "let qx: float = rot.x"
+      },
+      "y": {
+        "description": "The Y component of the quaternion.",
+        "example": "let qy: float = rot.y"
+      },
+      "z": {
+        "description": "The Z component of the quaternion.",
+        "example": "let qz: float = rot.z"
+      },
+      "w": {
+        "description": "The W (scalar) component of the quaternion.",
+        "example": "let qw: float = rot.w"
+      },
+      "identity": {
+        "description": "Static. The identity quaternion representing no rotation.",
+        "example": "transform.rotation = Quaternion.identity"
+      }
+    },
+    "methods": {
+      "Euler": {
+        "description": "Static. Creates a rotation from Euler angles in degrees (X=pitch, Y=yaw, Z=roll).",
+        "example": "let rot: Quaternion = Quaternion.Euler(0.0, 180.0, 0.0)"
+      },
+      "LookRotation": {
+        "description": "Static. Creates a rotation that looks in the given forward direction.",
+        "example": "let rot: Quaternion = Quaternion.LookRotation(direction)"
+      },
+      "Slerp": {
+        "description": "Static. Spherically interpolates between two rotations by t. Best for smooth rotation blending.",
+        "example": "transform.rotation = Quaternion.Slerp(from, to, t)"
+      },
+      "Lerp": {
+        "description": "Static. Linearly interpolates between two rotations by t. Faster than Slerp but less accurate for large angles.",
+        "example": "transform.rotation = Quaternion.Lerp(from, to, t)"
+      },
+      "Angle": {
+        "description": "Static. Returns the angle in degrees between two rotations.",
+        "example": "let diff: float = Quaternion.Angle(a, b)"
+      },
+      "Inverse": {
+        "description": "Static. Returns the inverse (opposite) of a rotation.",
+        "example": "let inv: Quaternion = Quaternion.Inverse(rot)"
+      },
+      "RotateTowards": {
+        "description": "Static. Rotates from one rotation toward another, limited by a maximum angle step.",
+        "example": "transform.rotation = Quaternion.RotateTowards(current, target, speed * Time.deltaTime)"
+      }
+    }
+  },
+  "Color": {
+    "udonOwner": "UnityEngineColor",
+    "description": "Represents an RGBA color with each channel ranging from 0 to 1. Commonly used in VRChat worlds to tint materials, fade UI elements, and drive lighting effects.",
+    "properties": {
+      "r": {
+        "description": "The red channel (0-1).",
+        "example": "let redAmount: float = color.r"
+      },
+      "g": {
+        "description": "The green channel (0-1).",
+        "example": "let greenAmount: float = color.g"
+      },
+      "b": {
+        "description": "The blue channel (0-1).",
+        "example": "let blueAmount: float = color.b"
+      },
+      "a": {
+        "description": "The alpha (opacity) channel (0-1). 0 is fully transparent, 1 is fully opaque.",
+        "example": "let opacity: float = color.a"
+      },
+      "red": {
+        "description": "Static. Solid red (1, 0, 0, 1).",
+        "example": "let c: Color = Color.red"
+      },
+      "green": {
+        "description": "Static. Solid green (0, 1, 0, 1).",
+        "example": "let c: Color = Color.green"
+      },
+      "blue": {
+        "description": "Static. Solid blue (0, 0, 1, 1).",
+        "example": "let c: Color = Color.blue"
+      },
+      "white": {
+        "description": "Static. Solid white (1, 1, 1, 1).",
+        "example": "let c: Color = Color.white"
+      },
+      "black": {
+        "description": "Static. Solid black (0, 0, 0, 1).",
+        "example": "let c: Color = Color.black"
+      },
+      "yellow": {
+        "description": "Static. Solid yellow (1, 0.92, 0.016, 1).",
+        "example": "let c: Color = Color.yellow"
+      },
+      "cyan": {
+        "description": "Static. Solid cyan (0, 1, 1, 1).",
+        "example": "let c: Color = Color.cyan"
+      },
+      "magenta": {
+        "description": "Static. Solid magenta (1, 0, 1, 1).",
+        "example": "let c: Color = Color.magenta"
+      },
+      "clear": {
+        "description": "Static. Fully transparent black (0, 0, 0, 0).",
+        "example": "let c: Color = Color.clear"
+      },
+      "gray": {
+        "description": "Static. Medium gray (0.5, 0.5, 0.5, 1).",
+        "example": "let c: Color = Color.gray"
+      }
+    },
+    "methods": {
+      "Lerp": {
+        "description": "Static. Linearly interpolates between two colors by t (clamped 0-1). Great for color fades.",
+        "example": "let fade: Color = Color.Lerp(Color.red, Color.blue, t)"
+      },
+      "LerpUnclamped": {
+        "description": "Static. Linearly interpolates between two colors without clamping t.",
+        "example": "let c: Color = Color.LerpUnclamped(start, end, t)"
+      }
+    }
+  },
+  "Rigidbody": {
+    "udonOwner": "UnityEngineRigidbody",
+    "description": "Adds physics simulation to a GameObject, enabling gravity, collisions, and forces. In VRChat worlds, Rigidbodies drive throwable pickups, physics puzzles, and any object that needs to move realistically.",
+    "properties": {
+      "velocity": {
+        "description": "The linear velocity of the rigidbody in world-space units per second.",
+        "example": "let vel: Vector3 = rb.velocity"
+      },
+      "angularVelocity": {
+        "description": "The angular (rotational) velocity in radians per second.",
+        "example": "let spin: Vector3 = rb.angularVelocity"
+      },
+      "mass": {
+        "description": "The mass of the rigidbody in kilograms.",
+        "example": "rb.mass = 2.0"
+      },
+      "drag": {
+        "description": "Linear drag coefficient. Higher values slow movement faster.",
+        "example": "rb.drag = 0.5"
+      },
+      "angularDrag": {
+        "description": "Rotational drag coefficient. Higher values slow rotation faster.",
+        "example": "rb.angularDrag = 1.0"
+      },
+      "useGravity": {
+        "description": "Whether gravity affects this rigidbody.",
+        "example": "rb.useGravity = false"
+      },
+      "isKinematic": {
+        "description": "When true, the rigidbody is not driven by physics but can still affect other bodies.",
+        "example": "rb.isKinematic = true"
+      },
+      "position": {
+        "description": "The position of the rigidbody in physics space.",
+        "example": "let pos: Vector3 = rb.position"
+      },
+      "rotation": {
+        "description": "The rotation of the rigidbody in physics space.",
+        "example": "let rot: Quaternion = rb.rotation"
+      }
+    },
+    "methods": {
+      "AddForce": {
+        "description": "Applies a force vector to the rigidbody, pushing it over time.",
+        "example": "rb.AddForce(Vector3.up * 10.0)"
+      },
+      "AddTorque": {
+        "description": "Applies a torque vector, causing the rigidbody to spin.",
+        "example": "rb.AddTorque(Vector3.up * 5.0)"
+      },
+      "MovePosition": {
+        "description": "Moves the rigidbody to a position, respecting physics interpolation.",
+        "example": "rb.MovePosition(targetPosition)"
+      },
+      "MoveRotation": {
+        "description": "Rotates the rigidbody to a rotation, respecting physics interpolation.",
+        "example": "rb.MoveRotation(targetRotation)"
+      }
+    }
+  },
+  "Collider": {
+    "udonOwner": "UnityEngineCollider",
+    "description": "Defines the collision shape of a GameObject for physics and trigger detection. In VRChat worlds, colliders are essential for player interaction zones, trigger volumes, and physical boundaries.",
+    "properties": {
+      "enabled": {
+        "description": "Whether this collider is active. Disabled colliders are ignored by physics.",
+        "example": "collider.enabled = false"
+      },
+      "bounds": {
+        "description": "The world-space bounding box of the collider.",
+        "example": "let b: Bounds = collider.bounds"
+      },
+      "isTrigger": {
+        "description": "When true, the collider acts as a trigger zone instead of a solid surface.",
+        "example": "collider.isTrigger = true"
+      },
+      "attachedRigidbody": {
+        "description": "The Rigidbody attached to this collider's GameObject, or null if none.",
+        "example": "let rb: Rigidbody = collider.attachedRigidbody"
+      }
+    },
+    "methods": {
+      "ClosestPoint": {
+        "description": "Returns the closest point on the collider surface to a given position.",
+        "example": "let closest: Vector3 = collider.ClosestPoint(playerPos)"
+      },
+      "Raycast": {
+        "description": "Casts a ray against this collider and returns hit information.",
+        "example": "// Use Physics.Raycast for general raycasting instead"
+      }
+    }
+  },
+  "AudioSource": {
+    "udonOwner": "UnityEngineAudioSource",
+    "description": "Plays audio clips in the scene with spatial positioning, volume, and pitch control. In VRChat worlds, AudioSources power background music, sound effects, ambient audio, and interactive sound triggers.",
+    "properties": {
+      "clip": {
+        "description": "The AudioClip currently assigned to this source.",
+        "example": "let c: AudioClip = audioSource.clip"
+      },
+      "volume": {
+        "description": "Playback volume from 0 (silent) to 1 (full).",
+        "example": "audioSource.volume = 0.5"
+      },
+      "pitch": {
+        "description": "Playback speed/pitch multiplier. 1 is normal, 2 is double speed.",
+        "example": "audioSource.pitch = 1.2"
+      },
+      "loop": {
+        "description": "Whether the audio restarts automatically when it reaches the end.",
+        "example": "audioSource.loop = true"
+      },
+      "isPlaying": {
+        "description": "True if the source is currently playing a clip.",
+        "example": "let playing: bool = audioSource.isPlaying"
+      },
+      "time": {
+        "description": "Current playback position in seconds.",
+        "example": "let pos: float = audioSource.time"
+      },
+      "mute": {
+        "description": "When true, the source is silenced but continues playing internally.",
+        "example": "audioSource.mute = true"
+      },
+      "playOnAwake": {
+        "description": "Whether the source starts playing automatically when the scene loads.",
+        "example": "audioSource.playOnAwake = false"
+      },
+      "spatialBlend": {
+        "description": "Controls 2D (0) to 3D (1) spatial blending. 3D audio fades with distance.",
+        "example": "audioSource.spatialBlend = 1.0"
+      }
+    },
+    "methods": {
+      "Play": {
+        "description": "Starts playing the assigned clip from the current time position.",
+        "example": "audioSource.Play()"
+      },
+      "Stop": {
+        "description": "Stops playback and resets the time position.",
+        "example": "audioSource.Stop()"
+      },
+      "Pause": {
+        "description": "Pauses playback at the current position. Resume with UnPause.",
+        "example": "audioSource.Pause()"
+      },
+      "UnPause": {
+        "description": "Resumes playback from where it was paused.",
+        "example": "audioSource.UnPause()"
+      },
+      "PlayOneShot": {
+        "description": "Plays a clip once without interrupting the current clip. Ideal for overlapping sound effects.",
+        "example": "audioSource.PlayOneShot(sfxClip)"
+      }
+    }
+  },
+  "Animator": {
+    "udonOwner": "UnityEngineAnimator",
+    "description": "Controls animation state machines and blend trees on a GameObject. In VRChat worlds, Animators drive doors opening, buttons pressing, environment changes, and any visual state transitions.",
+    "properties": {
+      "speed": {
+        "description": "Global playback speed multiplier for all animations on this Animator.",
+        "example": "animator.speed = 0.5"
+      },
+      "enabled": {
+        "description": "Whether this Animator component is active.",
+        "example": "animator.enabled = true"
+      }
+    },
+    "methods": {
+      "SetBool": {
+        "description": "Sets a boolean parameter in the Animator controller by name.",
+        "example": "animator.SetBool(\"isOpen\", true)"
+      },
+      "SetFloat": {
+        "description": "Sets a float parameter in the Animator controller by name.",
+        "example": "animator.SetFloat(\"speed\", 1.5)"
+      },
+      "SetInteger": {
+        "description": "Sets an integer parameter in the Animator controller by name.",
+        "example": "animator.SetInteger(\"state\", 2)"
+      },
+      "SetTrigger": {
+        "description": "Activates a trigger parameter, causing a one-shot transition.",
+        "example": "animator.SetTrigger(\"jump\")"
+      },
+      "GetBool": {
+        "description": "Returns the current value of a boolean Animator parameter.",
+        "example": "let open: bool = animator.GetBool(\"isOpen\")"
+      },
+      "GetFloat": {
+        "description": "Returns the current value of a float Animator parameter.",
+        "example": "let spd: float = animator.GetFloat(\"speed\")"
+      },
+      "GetInteger": {
+        "description": "Returns the current value of an integer Animator parameter.",
+        "example": "let state: int = animator.GetInteger(\"state\")"
+      },
+      "Play": {
+        "description": "Plays an animation state by name immediately.",
+        "example": "animator.Play(\"Idle\")"
+      },
+      "CrossFade": {
+        "description": "Smoothly transitions to an animation state over a given duration in seconds.",
+        "example": "animator.CrossFade(\"Walk\", 0.25)"
+      }
+    }
+  },
+  "Mathf": {
+    "udonOwner": "UnityEngineMathf",
+    "description": "A collection of static math functions and constants. Mathf is used everywhere in VRChat worlds for clamping values, interpolating animations, computing trigonometry, and generating oscillating effects.",
+    "properties": {
+      "PI": {
+        "description": "The mathematical constant pi (3.14159265...).",
+        "example": "let halfCircle: float = Mathf.PI"
+      },
+      "Infinity": {
+        "description": "Positive infinity. Useful as an initial value when searching for a minimum.",
+        "example": "let best: float = Mathf.Infinity"
+      },
+      "Deg2Rad": {
+        "description": "Multiply by this constant to convert degrees to radians.",
+        "example": "let rad: float = 90.0 * Mathf.Deg2Rad"
+      },
+      "Rad2Deg": {
+        "description": "Multiply by this constant to convert radians to degrees.",
+        "example": "let deg: float = angle * Mathf.Rad2Deg"
+      },
+      "Epsilon": {
+        "description": "The smallest float value greater than zero. Useful for float comparisons.",
+        "example": "// Use Mathf.Epsilon for near-zero checks"
+      }
+    },
+    "methods": {
+      "Abs": {
+        "description": "Returns the absolute (non-negative) value of a float.",
+        "example": "let d: float = Mathf.Abs(a - b)"
+      },
+      "Ceil": {
+        "description": "Returns the smallest integer greater than or equal to the value, as a float.",
+        "example": "let up: float = Mathf.Ceil(2.3)"
+      },
+      "CeilToInt": {
+        "description": "Returns the smallest integer greater than or equal to the value, as an int.",
+        "example": "let up: int = Mathf.CeilToInt(2.3)"
+      },
+      "Clamp": {
+        "description": "Restricts a value to lie between min and max (inclusive).",
+        "example": "let hp: float = Mathf.Clamp(health, 0.0, 100.0)"
+      },
+      "Clamp01": {
+        "description": "Restricts a value to lie between 0 and 1.",
+        "example": "let t: float = Mathf.Clamp01(progress)"
+      },
+      "Floor": {
+        "description": "Returns the largest integer less than or equal to the value, as a float.",
+        "example": "let down: float = Mathf.Floor(2.9)"
+      },
+      "FloorToInt": {
+        "description": "Returns the largest integer less than or equal to the value, as an int.",
+        "example": "let down: int = Mathf.FloorToInt(2.9)"
+      },
+      "Lerp": {
+        "description": "Linearly interpolates between a and b by t (clamped 0-1).",
+        "example": "let val: float = Mathf.Lerp(0.0, 100.0, t)"
+      },
+      "LerpUnclamped": {
+        "description": "Linearly interpolates between a and b without clamping t.",
+        "example": "let val: float = Mathf.LerpUnclamped(0.0, 100.0, t)"
+      },
+      "Max": {
+        "description": "Returns the larger of two float values.",
+        "example": "let bigger: float = Mathf.Max(a, b)"
+      },
+      "Min": {
+        "description": "Returns the smaller of two float values.",
+        "example": "let smaller: float = Mathf.Min(a, b)"
+      },
+      "MoveTowards": {
+        "description": "Moves a value toward a target by at most maxDelta per call.",
+        "example": "let val: float = Mathf.MoveTowards(current, target, speed * Time.deltaTime)"
+      },
+      "PingPong": {
+        "description": "Oscillates a value between 0 and length as the input increases.",
+        "example": "let bounce: float = Mathf.PingPong(Time.time, 1.0)"
+      },
+      "Pow": {
+        "description": "Returns base raised to the given exponent.",
+        "example": "let sq: float = Mathf.Pow(x, 2.0)"
+      },
+      "Round": {
+        "description": "Rounds to the nearest integer, returning a float.",
+        "example": "let r: float = Mathf.Round(2.6)"
+      },
+      "RoundToInt": {
+        "description": "Rounds to the nearest integer, returning an int.",
+        "example": "let r: int = Mathf.RoundToInt(2.6)"
+      },
+      "Sign": {
+        "description": "Returns 1 for positive values, -1 for negative values, and 0 for zero.",
+        "example": "let dir: float = Mathf.Sign(velocity)"
+      },
+      "Sin": {
+        "description": "Returns the sine of an angle in radians. Great for oscillating effects.",
+        "example": "let wave: float = Mathf.Sin(Time.time * 2.0)"
+      },
+      "Cos": {
+        "description": "Returns the cosine of an angle in radians.",
+        "example": "let x: float = Mathf.Cos(angle)"
+      },
+      "Tan": {
+        "description": "Returns the tangent of an angle in radians.",
+        "example": "let t: float = Mathf.Tan(angle)"
+      },
+      "Sqrt": {
+        "description": "Returns the square root of a value.",
+        "example": "let root: float = Mathf.Sqrt(16.0)"
+      },
+      "Log": {
+        "description": "Returns the natural logarithm (base e) of a value.",
+        "example": "let ln: float = Mathf.Log(x)"
+      },
+      "Repeat": {
+        "description": "Wraps a value into the range [0, length), like modulo but works with floats.",
+        "example": "let wrapped: float = Mathf.Repeat(Time.time, 5.0)"
+      }
+    }
+  },
+  "Player": {
+    "udonOwner": "VRCSDKBaseVRCPlayerApi",
+    "description": "Represents a VRChat player in the instance. The Player API lets you read player information like display name and position, teleport players, modify movement settings, and check network roles like master or instance owner.",
+    "properties": {
+      "displayName": {
+        "description": "The player's visible VRChat display name.",
+        "example": "log(\"Welcome, {player.displayName}\")"
+      },
+      "playerId": {
+        "description": "The unique integer ID assigned to this player for the current instance.",
+        "example": "let id: int = player.playerId"
+      },
+      "isMaster": {
+        "description": "True if this player is the current instance master (first player or next after master leaves).",
+        "example": "let master: bool = player.isMaster"
+      },
+      "isLocal": {
+        "description": "True if this player is the local user running this Udon script.",
+        "example": "let local: bool = player.isLocal"
+      },
+      "isInstanceOwner": {
+        "description": "True if this player created the current VRChat instance.",
+        "example": "let owner: bool = player.isInstanceOwner"
+      }
+    },
+    "methods": {
+      "GetPosition": {
+        "description": "Returns the player's current world-space position.",
+        "example": "let pos: Vector3 = player.GetPosition()"
+      },
+      "GetRotation": {
+        "description": "Returns the player's current world-space rotation.",
+        "example": "let rot: Quaternion = player.GetRotation()"
+      },
+      "TeleportTo": {
+        "description": "Teleports the player to a position and rotation. Only works on the local player.",
+        "example": "player.TeleportTo(spawnPos, spawnRot)"
+      },
+      "SetVelocity": {
+        "description": "Sets the player's movement velocity. Useful for launch pads and boost zones.",
+        "example": "player.SetVelocity(Vector3.up * 10.0)"
+      },
+      "GetBonePosition": {
+        "description": "Returns the world position of a specific avatar bone (e.g., head, hand).",
+        "example": "let headPos: Vector3 = player.GetBonePosition(HumanBodyBones.Head)"
+      },
+      "GetBoneRotation": {
+        "description": "Returns the world rotation of a specific avatar bone.",
+        "example": "let handRot: Quaternion = player.GetBoneRotation(HumanBodyBones.RightHand)"
+      },
+      "IsPlayerGrounded": {
+        "description": "Returns true if the player is currently standing on a surface.",
+        "example": "let grounded: bool = player.IsPlayerGrounded()"
+      },
+      "IsUserInVR": {
+        "description": "Returns true if the player is using a VR headset (false for desktop users).",
+        "example": "let vr: bool = player.IsUserInVR()"
+      },
+      "Immobilize": {
+        "description": "Prevents or allows the local player from moving. Pass true to freeze, false to unfreeze.",
+        "example": "player.Immobilize(true)"
+      },
+      "EnablePickups": {
+        "description": "Enables or disables the player's ability to pick up VRC_Pickup objects.",
+        "example": "player.EnablePickups(false)"
+      },
+      "SetJumpImpulse": {
+        "description": "Sets the upward force applied when the player jumps.",
+        "example": "player.SetJumpImpulse(5.0)"
+      },
+      "SetRunSpeed": {
+        "description": "Sets the player's running movement speed.",
+        "example": "player.SetRunSpeed(8.0)"
+      },
+      "SetWalkSpeed": {
+        "description": "Sets the player's walking movement speed.",
+        "example": "player.SetWalkSpeed(2.0)"
+      },
+      "SetGravityStrength": {
+        "description": "Sets the gravity multiplier for the player. 1 is normal, 0 is zero-gravity.",
+        "example": "player.SetGravityStrength(0.5)"
+      }
+    }
+  },
+  "Networking": {
+    "udonOwner": "VRCSDKBaseVRCNetworking",
+    "description": "Provides static methods for VRChat's networking system, including ownership management and local player access. Ownership determines which client has authority to sync an object's state to other players.",
+    "properties": {},
+    "methods": {
+      "IsOwner": {
+        "description": "Returns true if the given player is the network owner of the specified GameObject.",
+        "example": "let owned: bool = Networking.IsOwner(player, gameObject)"
+      },
+      "SetOwner": {
+        "description": "Transfers network ownership of a GameObject to the specified player. Required before modifying synced variables.",
+        "example": "Networking.SetOwner(player, gameObject)"
+      },
+      "LocalPlayer": {
+        "description": "Returns the VRCPlayerApi for the local user running this script.",
+        "example": "let me: Player = Networking.LocalPlayer"
+      },
+      "GetOwner": {
+        "description": "Returns the VRCPlayerApi of the current network owner of a GameObject.",
+        "example": "let owner: Player = Networking.GetOwner(gameObject)"
+      },
+      "IsNetworkSettled": {
+        "description": "Returns true once all synced data has been received after joining an instance. Use this to delay initialization.",
+        "example": "let ready: bool = Networking.IsNetworkSettled"
+      },
+      "IsInstanceOwner": {
+        "description": "Returns true if the local player is the instance creator.",
+        "example": "let isCreator: bool = Networking.IsInstanceOwner"
+      },
+      "IsMaster": {
+        "description": "Returns true if the local player is the current instance master.",
+        "example": "let master: bool = Networking.IsMaster"
+      },
+      "IsClogged": {
+        "description": "Returns true if the network send queue is backed up. Useful for throttling sync requests.",
+        "example": "let busy: bool = Networking.IsClogged"
+      }
+    }
+  },
+  "Time": {
+    "udonOwner": "UnityEngineTime",
+    "description": "Provides read-only static properties for tracking elapsed time, frame deltas, and frame counts. In VRChat worlds, Time values drive animations, cooldown timers, movement smoothing, and any frame-rate-independent logic.",
+    "properties": {
+      "time": {
+        "description": "Time in seconds since the scene loaded (affected by time scale).",
+        "example": "let elapsed: float = Time.time"
+      },
+      "deltaTime": {
+        "description": "Time in seconds since the last frame. Multiply by this for frame-rate-independent movement.",
+        "example": "on Update {\n  transform.Translate(0.0, speed * Time.deltaTime, 0.0)\n}"
+      },
+      "fixedDeltaTime": {
+        "description": "The fixed time step in seconds used by physics updates.",
+        "example": "let step: float = Time.fixedDeltaTime"
+      },
+      "unscaledTime": {
+        "description": "Time in seconds since the scene loaded, ignoring time scale changes.",
+        "example": "let real: float = Time.unscaledTime"
+      },
+      "unscaledDeltaTime": {
+        "description": "Frame delta time ignoring time scale. Useful for UI animations.",
+        "example": "let dt: float = Time.unscaledDeltaTime"
+      },
+      "frameCount": {
+        "description": "The total number of frames that have been rendered since the scene started.",
+        "example": "let frame: int = Time.frameCount"
+      },
+      "realtimeSinceStartup": {
+        "description": "Real wall-clock time in seconds since the application started.",
+        "example": "let uptime: float = Time.realtimeSinceStartup"
+      },
+      "timeSinceLevelLoad": {
+        "description": "Time in seconds since the current scene (level) was loaded.",
+        "example": "let since: float = Time.timeSinceLevelLoad"
+      }
+    },
+    "methods": {}
+  },
+  "Debug": {
+    "udonOwner": "UnityEngineDebug",
+    "description": "Provides static logging methods that write to the Unity console. In Nori, prefer the built-in log(), warn(), and error() shortcut functions which are more concise and support string interpolation directly.",
+    "properties": {},
+    "methods": {
+      "Log": {
+        "description": "Writes an informational message to the Unity console.",
+        "example": "// Prefer: log(\"hello {name}\")\nDebug.Log(\"hello world\")"
+      },
+      "LogWarning": {
+        "description": "Writes a warning message (yellow) to the Unity console.",
+        "example": "// Prefer: warn(\"low health\")\nDebug.LogWarning(\"low health\")"
+      },
+      "LogError": {
+        "description": "Writes an error message (red) to the Unity console.",
+        "example": "// Prefer: error(\"something broke\")\nDebug.LogError(\"something broke\")"
+      }
+    }
+  }
+}
