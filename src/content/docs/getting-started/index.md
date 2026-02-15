@@ -19,17 +19,18 @@ Before installing Nori, make sure you have the following:
 
 ## Install via VCC
 
-1. Open the **VRChat Creator Companion**.
-2. Go to **Settings > Packages** and click **Add Repository**.
-3. Paste the following git URL:
+1. Click the button below to add the Nori package repository to VCC:
+
+   **[Add to VCC](vcc://vpm/addRepo?url=https%3A%2F%2Fvcc.nori-lang.dev%2Findex.json)**
+
+   Or, open VCC and go to **Settings > Packages**, click **Add Repository**, and paste:
 
    ```
-   https://github.com/norilang/nori.git?path=Packages/dev.nori.compiler
+   https://vcc.nori-lang.dev/index.json
    ```
 
-4. Click **Add**. The Nori package will now appear in your package list.
-5. Open your VRChat world project and click **Manage Project**.
-6. Find **Nori Compiler** in the package list and click **Add**.
+2. Open your VRChat world project in VCC and click **Manage Project**.
+3. Find **Nori Language** in the package list and click **Add**.
 
 ## Install via UPM
 
