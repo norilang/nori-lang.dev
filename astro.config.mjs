@@ -29,6 +29,16 @@ export default defineConfig({
           ],
         },
         {
+          label: 'Editor Setup',
+          items: [
+            { label: 'Overview', slug: 'editors' },
+            { label: 'VS Code', slug: 'editors/vscode' },
+            { label: 'JetBrains Rider', slug: 'editors/rider' },
+            { label: 'Visual Studio', slug: 'editors/visual-studio' },
+            { label: 'Building the LSP Server', slug: 'editors/building-the-lsp' },
+          ],
+        },
+        {
           label: 'Language Reference',
           items: [
             { label: 'Overview', slug: 'language' },
