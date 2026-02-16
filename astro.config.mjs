@@ -85,6 +85,10 @@ export default defineConfig({
           tag: 'meta',
           attrs: { property: 'og:image', content: 'https://nori-lang.dev/og-image.png' },
         },
+        {
+          tag: 'meta',
+          attrs: { name: 'twitter:card', content: 'summary' },
+        },
       ],
       pagefind: true,
     }),
