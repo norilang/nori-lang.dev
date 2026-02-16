@@ -81,6 +81,10 @@ export default defineConfig({
           tag: 'meta',
           attrs: { name: 'theme-color', content: '#7c3aed' },
         },
+        {
+          tag: 'meta',
+          attrs: { property: 'og:image', content: 'https://nori-lang.dev/og-image.png' },
+        },
       ],
       pagefind: true,
     }),
