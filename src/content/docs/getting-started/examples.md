@@ -2,7 +2,7 @@
 title: Examples
 description: Annotated Nori code examples for common VRChat world patterns.
 sidebar:
-  order: 3
+  order: 4
 ---
 
 This page collects annotated Nori examples for patterns you will use frequently when building VRChat worlds. Each example is self-contained and includes a breakdown of the key concepts it demonstrates.

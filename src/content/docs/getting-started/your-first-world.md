@@ -2,7 +2,7 @@
 title: Your First World
 description: Build a simple interactive VRChat world with Nori in three steps.
 sidebar:
-  order: 2
+  order: 3
 ---
 
 This tutorial walks you through building a small interactive VRChat world with Nori. Each step introduces new language features and builds on the one before it. By the end, you will have a clickable object, an animated door, and a networked scoreboard.
@@ -11,9 +11,8 @@ This tutorial walks you through building a small interactive VRChat world with N
 
 Start with the simplest possible interaction: an object that counts how many times you click it.
 
-1. Create a **Cube** in your scene (GameObject > 3D Object > Cube).
-2. Add an **UdonBehaviour** component to the Cube.
-3. Create a file called `click_counter.nori` in your Assets folder with the following code:
+1. Right-click in the **Project** window and select **Create > Nori Script**. Rename it to `click_counter.nori`.
+2. Open it in a text editor and replace the template with the following code:
 
 ```rust
 let count: int = 0
@@ -24,8 +23,9 @@ on Interact {
 }
 ```
 
-4. Assign the compiled program to the UdonBehaviour and enter Play mode.
-5. Click the Cube. The Console should show "Clicked 1 times!", "Clicked 2 times!", and so on.
+3. Create a **Cube** in your scene (GameObject > 3D Object > Cube).
+4. Drag `click_counter.nori` from the Project window onto the Cube in the **Hierarchy**.
+5. Enter Play mode and click the Cube. The Console should show "Clicked 1 times!", "Clicked 2 times!", and so on.
 
 ### What this code does
 
@@ -37,9 +37,8 @@ on Interact {
 
 Next, create a door that swings open and closed when clicked. This introduces public variables, booleans, and per-frame updates.
 
-1. Add a second GameObject to your scene to serve as the door (e.g., a scaled Cube).
-2. Add an **UdonBehaviour** component to it.
-3. Create a file called `toggle_door.nori`:
+1. Create a new Nori script (**Create > Nori Script**) and rename it to `toggle_door.nori`.
+2. Open it in a text editor and replace the template with the following code:
 
 ```rust
 pub let speed: float = 90.0
@@ -74,7 +73,9 @@ on Update {
 }
 ```
 
-4. Assign the program to the UdonBehaviour. In the Inspector, you will see a **speed** field that you can edit. Enter Play mode and click the door to toggle it.
+3. Add a second GameObject to your scene to serve as the door (e.g., a scaled Cube).
+4. Drag `toggle_door.nori` onto the door GameObject in the **Hierarchy**.
+5. In the Inspector, you will see a **Speed** field under Public Variables that you can edit. Enter Play mode and click the door to toggle it.
 
 ### What this code does
 
@@ -88,9 +89,8 @@ on Update {
 
 Finally, build a scoreboard that syncs across all players in the world. This introduces networking, custom events, and functions.
 
-1. Create a new GameObject for the scoreboard.
-2. Add an **UdonBehaviour** component.
-3. Create a file called `scoreboard.nori`:
+1. Create a new Nori script (**Create > Nori Script**) and rename it to `scoreboard.nori`.
+2. Open it in a text editor and replace the template with the following code:
 
 ```rust
 pub let max_score: int = 10
@@ -127,7 +127,9 @@ on Interact {
 }
 ```
 
-4. Assign the program and enter Play mode. Click the scoreboard to increment the score. After reaching the max score, further clicks are ignored.
+3. Create a new GameObject for the scoreboard.
+4. Drag `scoreboard.nori` onto the scoreboard GameObject in the **Hierarchy**.
+5. Enter Play mode. Click the scoreboard to increment the score. After reaching the max score, further clicks are ignored.
 
 ### What this code does
 

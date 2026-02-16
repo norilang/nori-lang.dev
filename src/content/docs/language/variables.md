@@ -37,6 +37,23 @@ pub let target_object: GameObject = null
 
 Public variables appear as editable fields on the UdonBehaviour component in the Unity Editor. The initial value in the code serves as the default, but the Inspector value takes priority at runtime.
 
+## Doc comments
+
+Use `///` comments directly above a `pub let` declaration to attach a description that appears as a tooltip in the Unity Inspector:
+
+```rust
+/// Maximum health points for this character.
+pub let max_health: int = 100
+
+/// How fast the door opens, in degrees per second.
+/// Higher values make the animation snappier.
+pub let door_speed: float = 90.0
+```
+
+Multiple `///` lines are joined into a single tooltip string. Blank lines between the comment and the declaration are allowed. Only `///` comments are extracted — regular `//` comments are ignored.
+
+Doc comments only apply to `pub let` variables. Comments above private `let` or `sync` declarations have no effect in the inspector.
+
 ## Synced variables
 
 Use `sync` to declare a variable that is replicated across the network to all players:

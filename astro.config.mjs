@@ -26,6 +26,7 @@ export default defineConfig({
           label: 'Getting Started',
           items: [
             { label: 'Installation', slug: 'getting-started' },
+            { label: 'Unity Workflow', slug: 'getting-started/unity-workflow' },
             { label: 'Your First World', slug: 'getting-started/your-first-world' },
             { label: 'Examples', slug: 'getting-started/examples' },
           ],

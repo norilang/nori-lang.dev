@@ -51,8 +51,8 @@ If you prefer to add the package directly inside Unity:
 
 Once the package is installed, confirm everything is working by creating a simple program.
 
-1. In your Unity **Assets** folder, create a new file called `hello.nori`.
-2. Open it in a text editor and paste the following code:
+1. Right-click in the **Project** window and select **Create > Nori Script**.
+2. Rename the file to `hello.nori`. It comes with a starter template:
 
    ```rust
    on Start {
@@ -64,12 +64,10 @@ Once the package is installed, confirm everything is working by creating a simpl
    }
    ```
 
-3. In the Unity scene, create a new **GameObject** (e.g., a Cube).
-4. Add an **UdonBehaviour** component to the GameObject.
-5. Assign the compiled Nori program to the UdonBehaviour.
-6. Enter **Play mode**.
-7. Open the **Console** window (**Window > General > Console**) and confirm you see the message: `Hello from Nori!`
-8. Click the GameObject in the Game view to trigger the Interact event. You should see: `You clicked me!`
+3. Drag `hello.nori` from the Project window onto the **Hierarchy** to create a new GameObject.
+4. Enter **Play mode**.
+5. Open the **Console** window (**Window > General > Console**) and confirm you see the message: `Hello from Nori!`
+6. Click the GameObject in the Game view to trigger the Interact event. You should see: `You clicked me!`
 
 If both messages appear, Nori is installed and working correctly.
 
