@@ -9,7 +9,7 @@ export default defineConfig({
       favicon: '/favicon.ico',
       description: 'A programming language for VRChat worlds that compiles to Udon Assembly.',
       logo: {
-        src: './src/assets/no.png',
+        src: './src/assets/nori_roll.png',
         replacesTitle: false,
       },
       social: {
