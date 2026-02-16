@@ -14,6 +14,7 @@ export default defineConfig({
       },
       social: {
         github: 'https://github.com/norilang/nori',
+        'x.com': 'https://x.com/nori_lang',
       },
       customCss: ['./src/styles/custom.css'],
       editLink: {
