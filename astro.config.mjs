@@ -7,7 +7,7 @@ export default defineConfig({
     starlight({
       title: 'Nori',
       favicon: '/favicon.ico',
-      description: 'A programming language for VRChat worlds that compiles to Udon Assembly.',
+      description: 'A programming language for VRChat worlds that compiles to Udon Assembly. VRChatワールド向けプログラミング言語。Udon Assemblyにコンパイルされます。',
       logo: {
         src: './src/assets/nori_roll.png',
         replacesTitle: false,
