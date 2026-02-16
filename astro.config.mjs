@@ -6,6 +6,7 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'Nori',
+      favicon: '/favicon.ico',
       description: 'A programming language for VRChat worlds that compiles to Udon Assembly.',
       logo: {
         light: './src/assets/logo-light.svg',
