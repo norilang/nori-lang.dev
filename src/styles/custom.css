@@ -15,15 +15,13 @@
   color-scheme: light;
 }
 
-/* Fix dropdown option contrast in Firefox (renders native popups outside the DOM,
-   ignoring both color-scheme and CSS variables — needs hardcoded values) */
-select option {
-  background-color: hsl(224, 14%, 16%);
-  color: hsl(224, 20%, 94%);
+/* Fix dropdown contrast in Firefox — it only respects color-scheme on the
+   <select> element itself, not inherited from :root, for native popups */
+select {
+  color-scheme: dark;
 }
-:root[data-theme='light'] select option {
-  background-color: hsl(224, 19%, 97%);
-  color: hsl(224, 14%, 16%);
+:root[data-theme='light'] select {
+  color-scheme: light;
 }
 
 /* Error code badges */
