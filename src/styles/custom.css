@@ -15,6 +15,17 @@
   color-scheme: light;
 }
 
+/* Fix dropdown option contrast in Firefox (renders native popups outside the DOM,
+   ignoring both color-scheme and CSS variables — needs hardcoded values) */
+select option {
+  background-color: hsl(224, 14%, 16%);
+  color: hsl(224, 20%, 94%);
+}
+:root[data-theme='light'] select option {
+  background-color: hsl(224, 19%, 97%);
+  color: hsl(224, 14%, 16%);
+}
+
 /* Error code badges */
 .error-code {
   font-family: var(--sl-font-system-mono);
