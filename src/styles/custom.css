@@ -5,18 +5,14 @@
   --sl-color-accent: #7c3aed;
   --sl-color-accent-high: #c4b5fd;
   --sl-font-system-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  color-scheme: dark;
 }
 
 :root[data-theme='light'] {
   --sl-color-accent-low: #ede9fe;
   --sl-color-accent: #7c3aed;
   --sl-color-accent-high: #4c1d95;
-}
-
-/* Fix dropdown (language/theme switcher) contrast */
-select option {
-  background-color: var(--sl-color-bg-nav);
-  color: var(--sl-color-gray-1);
+  color-scheme: light;
 }
 
 /* Error code badges */
