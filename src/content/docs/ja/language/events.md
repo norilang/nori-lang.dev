@@ -39,6 +39,8 @@ GameObjectのUnityライフサイクル中に発火します:
 | `Update` | -- | 毎フレーム |
 | `LateUpdate` | -- | 毎フレーム、すべての `Update` 呼び出しの後 |
 | `FixedUpdate` | -- | 物理ステップごと（固定時間間隔） |
+| `MouseDown` | -- | オブジェクトのコライダー上でマウスボタンが押されたとき |
+| `Destroy` | -- | GameObjectが破棄されるとき |
 
 ```rust
 on Start {
@@ -140,6 +142,7 @@ on PlayerLeft(player: Player) {
 | `TriggerEnter` | `other: Collider` | 別のコライダーがこのオブジェクトのトリガーゾーンに入ったとき |
 | `TriggerExit` | `other: Collider` | 別のコライダーがこのオブジェクトのトリガーゾーンから出たとき |
 | `CollisionEnter` | `collision: Collision` | 別のオブジェクトがこのオブジェクトと衝突したとき |
+| `CollisionExit` | `collision: Collision` | 別のオブジェクトがこのオブジェクトとの衝突を終了したとき |
 
 ```rust
 on TriggerEnter(other: Collider) {
@@ -157,6 +160,30 @@ on CollisionEnter(collision: Collision) {
 
 トリガーイベントでは、GameObjectに **Is Trigger** チェックボックスが有効になったColliderコンポーネントが必要です。
 
+### VRCプレイヤー物理イベント
+
+VRChatプレイヤーがトリガーゾーンやコライダーと接触したときに発火します：
+
+| イベント | パラメータ | 発火タイミング |
+|---------|-----------|--------------|
+| `PlayerTriggerEnter` | `player: Player` | プレイヤーがこのオブジェクトのトリガーゾーンに入ったとき |
+| `PlayerTriggerExit` | `player: Player` | プレイヤーがこのオブジェクトのトリガーゾーンから出たとき |
+| `PlayerCollisionEnter` | `player: Player` | プレイヤーがこのオブジェクトと衝突したとき |
+| `PlayerCollisionExit` | `player: Player` | プレイヤーがこのオブジェクトとの衝突を終了したとき |
+| `PlayerParticleCollision` | `player: Player` | このオブジェクトのパーティクルがプレイヤーに当たったとき |
+
+```rust
+on PlayerTriggerEnter(player: Player) {
+    log("{player.displayName} entered the zone")
+}
+
+on PlayerTriggerExit(player: Player) {
+    log("{player.displayName} left the zone")
+}
+```
+
+これらはVRChat固有のイベントで、インタラクションをトリガーした `Player` を提供します。`Collider` や `Collision` オブジェクトを提供する標準のUnityコリジョンイベントとは異なります。
+
 ### シリアライゼーションイベント
 
 ネットワーク経由の変数同期中に発火します:
@@ -166,6 +193,9 @@ on CollisionEnter(collision: Collision) {
 | `VariableChange` | -- | 同期変数がネットワークから更新されたとき（リモートクライアントで発火） |
 | `PreSerialization` | -- | 同期変数がネットワークに送信される直前（オーナーで発火） |
 | `PostSerialization` | `result: SerializationResult` | シリアライゼーション完了後（オーナーで発火） |
+| `Deserialization` | -- | 同期変数がネットワークから更新されたとき（VariableChangeの別名） |
+| `OwnershipRequest` | -- | 別のプレイヤーがこのオブジェクトのオーナーシップを要求したとき |
+| `OwnershipTransferred` | -- | このオブジェクトのオーナーシップが新しいプレイヤーに移転したとき |
 
 ```rust
 on VariableChange {
@@ -185,6 +215,46 @@ on PostSerialization(result: SerializationResult) {
 ```
 
 `VariableChange` は最もよく使われるシリアライゼーションイベントです。同期変数の値が更新された後にリモートクライアントで発火します。オーナーが行った状態変更に反応するために使用してください。詳細は[ネットワーキング](/ja/language/networking/)を参照してください。
+
+### VRC機能イベント
+
+VRChat固有の機能に応答して発火します：
+
+| イベント | パラメータ | 発火タイミング |
+|---------|-----------|--------------|
+| `VideoStart` | -- | このオブジェクトのVRC動画プレイヤーが再生を開始したとき |
+| `AvatarEyeHeightChanged` | -- | プレイヤーのアバタースケールが変更されたとき |
+
+### ダウンロードイベント
+
+URLダウンロード操作が完了したときに発火します。コンパイラが `result` パラメータを自動的に注入し、ハンドラ内でアクセスできます：
+
+| イベント | 暗黙のパラメータ | 発火タイミング |
+|---------|-------------------|--------------|
+| `StringLoadSuccess` | `result: IVRCStringDownload` | 文字列のダウンロードが正常に完了したとき |
+| `StringLoadError` | `result: IVRCStringDownload` | 文字列のダウンロードが失敗したとき |
+| `ImageLoadSuccess` | `result: IVRCImageDownload` | 画像のダウンロードが正常に完了したとき |
+| `ImageLoadError` | `result: IVRCImageDownload` | 画像のダウンロードが失敗したとき |
+
+```rust
+pub let url: VRCUrl = null
+
+on Start {
+    VRCStringDownloader.LoadUrl(url)
+}
+
+on StringLoadSuccess {
+    let text: string = result.Result
+    log("Downloaded: {text}")
+}
+
+on StringLoadError {
+    let err: string = result.Error
+    error("Download failed: {err}")
+}
+```
+
+注意：ほとんどのイベントとは異なり、ダウンロードイベントはイベントシグネチャでパラメータを宣言しません。`result` 変数はハンドラ本体内で自動的に利用可能です。コンパイラがパラメータの注入を処理します。
 
 ## イベントのコンパイル方法
 

@@ -41,6 +41,11 @@ Noriの型システムはVRChatのUdon VMで利用可能な型に直接マッピ
 | `AudioSource` | `UnityEngineAudioSource` | オーディオ再生コンポーネント |
 | `Animator` | `UnityEngineAnimator` | アニメーションコントローラー |
 | `Collision` | `UnityEngineCollision` | 衝突イベントデータ |
+| `Material` | `UnityEngineMaterial` | レンダリング用マテリアル（カラー、シェーダープロパティ） |
+| `Renderer` | `UnityEngineRenderer` | 基底レンダラーコンポーネント |
+| `LineRenderer` | `UnityEngineLineRenderer` | 3D空間にラインを描画 |
+| `ConstantForce` | `UnityEngineConstantForce` | 一定の物理力を適用 |
+| `Component` | `UnityEngineComponent` | すべてのコンポーネントの基底クラス |
 
 ## VRChat型
 
@@ -49,8 +54,73 @@ Noriの型システムはVRChatのUdon VMで利用可能な型に直接マッピ
 | `Player` | `VRCSDKBaseVRCPlayerApi` | VRChatプレイヤー。ローカルプレイヤーには`localPlayer`を使用。 |
 | `SerializationResult` | `VRCSDKBaseVRCSerializationResult` | シリアライゼーション操作の結果 |
 | `UdonBehaviour` | `VRCUdonUdonBehaviour` | 別のUdonBehaviourへの参照 |
+| `VRCObjectPool` | `VRCSDK3ComponentsVRCObjectPool` | 再利用可能なGameObjectのプール |
+| `VRCObjectSync` | `VRCSDK3ComponentsVRCObjectSync` | ネットワーク経由でオブジェクトの位置/回転を同期 |
+| `VRCAvatarPedestal` | `VRCSDK3ComponentsVRCAvatarPedestal` | アバター試着用のペデスタル |
+| `VRCPickup` | `VRCSDK3ComponentsVRCPickup` | 拾えるオブジェクトのコンポーネント |
+| `VRCVideoPlayer` | `VRCSDK3VideoComponentsBaseBaseVRCVideoPlayer` | 動画プレイヤーコンポーネント |
+| `VRCUrlInputField` | `VRCSDK3ComponentsVRCUrlInputField` | URL入力フィールドコンポーネント |
+| `VRCUrl` | `VRCSDKBaseVRCUrl` | 動画/ダウンロード用のURL値型 |
+| `VRCImageDownloader` | `VRCSDK3ImageVRCImageDownloader` | URLから画像をダウンロード |
+| `TextureInfo` | `VRCSDK3ImageTextureInfo` | テクスチャダウンロードの設定 |
+| `TrackingData` | `VRCSDKBaseVRCPlayerApiTrackingData` | VRトラッキングの位置と回転データ |
+| `IVRCStringDownload` | `VRCSDK3StringLoadingIVRCStringDownload` | 文字列ダウンロードの結果（`.Result`、`.Error`、`.ErrorCode` プロパティを持つ） |
+| `IVRCImageDownload` | `VRCSDK3ImageIVRCImageDownload` | 画像ダウンロードの結果（`.Error`、`.ErrorMessage` プロパティを持つ） |
 
 `Player`はVRChat固有のロジックで最も頻繁に使う型です。`displayName`、`isLocal`、`isMaster`などのプロパティを提供します。
+
+## UI型
+
+Unityの組み込みUIコンポーネントを使ってワールド内インターフェースを作成できます：
+
+| Nori型 | Udon型 | 主要プロパティ | 説明 |
+|-----------|-----------|--------------|-------------|
+| `UIText` | `UnityEngineUIText` | `.text: string` | UIにテキストを表示 |
+| `UIToggle` | `UnityEngineUIToggle` | `.isOn: bool` | チェックボックス / トグルスイッチ |
+| `UISlider` | `UnityEngineUISlider` | `.value: float` | 数値スライダー（デフォルトで0.0～1.0） |
+| `UIDropdown` | `UnityEngineUIDropdown` | `.value: int` | ドロップダウンメニュー（値は選択されたインデックス） |
+| `UIInputField` | `UnityEngineUIInputField` | `.text: string` | テキスト入力フィールド |
+
+```rust
+pub let label: UIText = null
+pub let volume_slider: UISlider = null
+
+on Start {
+    label.text = "Hello!"
+    let vol: float = volume_slider.value
+    log("Volume: {vol}")
+}
+```
+
+これらはUnityの`UnityEngine.UI`名前空間に対応します。CanvasのUIコンポーネントをInspectorフィールドにドラッグして割り当てます。
+
+## 列挙型
+
+NoriはUnityとVRChatのいくつかの組み込み列挙型をサポートしています。`型名.値`の構文で列挙値にアクセスします：
+
+| Nori型 | 値 | 説明 |
+|-----------|--------|-------------|
+| `KeyCode` | `KeyCode.Space`、`KeyCode.W`、`KeyCode.Return`、`KeyCode.Escape`、... | キーボードのキー定数 |
+| `TrackingDataType` | `TrackingDataType.Head`、`.LeftHand`、`.RightHand`、`.Origin` | VRトラッキングポイント |
+| `PickupHand` | `PickupHand.Left`、`PickupHand.Right` | VRの手の識別子 |
+
+```rust
+on Update {
+    if Input.GetKeyDown(KeyCode.Space) {
+        log("Space pressed!")
+    }
+}
+```
+
+```rust
+on Update {
+    let tracking: TrackingData = localPlayer.GetTrackingData(TrackingDataType.Head)
+    let head_pos: Vector3 = tracking.position
+    log("Head at: {head_pos}")
+}
+```
+
+Noriでは独自の列挙型を定義することはできません。Udon VMが認識する列挙型のみ利用可能です。
 
 ## 配列型
 
@@ -124,6 +194,12 @@ on Start {
 | `Vector4` | Vector4静的メンバ | -- |
 | `Quaternion` | Quaternion静的メンバ | `Quaternion.identity` |
 | `Color` | Color静的メンバ | -- |
+| `Random` | ランダム値 | `Random.value`、`Random.Range()`、`Random.ColorHSV()` |
+| `Input` | キーボード入力 | `Input.GetKeyDown()`、`Input.GetKey()`、`Input.GetKeyUp()` |
+| `String` | 文字列ユーティリティ | `String.Format()`、`String.Concat()` |
+| `Utilities` | VRChatユーティリティ | `Utilities.IsValid()` |
+| `VRCPlayerApi` | Player API静的メソッド | `VRCPlayerApi.GetPlayers()` |
+| `VRCStringDownloader` | 文字列ダウンロード | `VRCStringDownloader.LoadUrl()` |
 
 ```rust
 on Update {

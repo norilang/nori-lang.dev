@@ -39,6 +39,8 @@ These fire during the Unity lifecycle of the GameObject:
 | `Update` | -- | Every frame |
 | `LateUpdate` | -- | Every frame, after all `Update` calls |
 | `FixedUpdate` | -- | Every physics step (fixed time interval) |
+| `MouseDown` | -- | Mouse button pressed on the object's collider |
+| `Destroy` | -- | The GameObject is being destroyed |
 
 ```rust
 on Start {
@@ -140,6 +142,7 @@ These fire during physics interactions:
 | `TriggerEnter` | `other: Collider` | Another collider enters this object's trigger zone |
 | `TriggerExit` | `other: Collider` | Another collider exits this object's trigger zone |
 | `CollisionEnter` | `collision: Collision` | Another object collides with this object |
+| `CollisionExit` | `collision: Collision` | Another object stops colliding with this object |
 
 ```rust
 on TriggerEnter(other: Collider) {
@@ -157,6 +160,30 @@ on CollisionEnter(collision: Collision) {
 
 For trigger events, the GameObject must have a Collider component with the **Is Trigger** checkbox enabled.
 
+### VRC player physics events
+
+These fire when VRChat players interact with trigger zones or colliders:
+
+| Event | Parameters | When it fires |
+|-------|-----------|---------------|
+| `PlayerTriggerEnter` | `player: Player` | A player enters this object's trigger zone |
+| `PlayerTriggerExit` | `player: Player` | A player exits this object's trigger zone |
+| `PlayerCollisionEnter` | `player: Player` | A player collides with this object |
+| `PlayerCollisionExit` | `player: Player` | A player stops colliding with this object |
+| `PlayerParticleCollision` | `player: Player` | A particle from this object hits a player |
+
+```rust
+on PlayerTriggerEnter(player: Player) {
+    log("{player.displayName} entered the zone")
+}
+
+on PlayerTriggerExit(player: Player) {
+    log("{player.displayName} left the zone")
+}
+```
+
+These are VRChat-specific events that provide the `Player` who triggered the interaction, unlike the standard Unity collision events which provide `Collider` or `Collision` objects.
+
 ### Serialization events
 
 These fire during variable synchronization across the network:
@@ -166,6 +193,9 @@ These fire during variable synchronization across the network:
 | `VariableChange` | -- | Synced variables have been updated from the network (fires on remote clients) |
 | `PreSerialization` | -- | Just before synced variables are sent to the network (fires on the owner) |
 | `PostSerialization` | `result: SerializationResult` | After serialization completes (fires on the owner) |
+| `Deserialization` | -- | Synced variables have been updated from the network (alternative name for VariableChange) |
+| `OwnershipRequest` | -- | Another player has requested ownership of this object |
+| `OwnershipTransferred` | -- | Ownership of this object has been transferred to a new player |
 
 ```rust
 on VariableChange {
@@ -185,6 +215,46 @@ on PostSerialization(result: SerializationResult) {
 ```
 
 `VariableChange` is the most commonly used serialization event. It fires on remote clients after synced variable values have been updated. Use it to react to state changes that the owner made. See [Networking](/language/networking/) for details.
+
+### VRC feature events
+
+These fire in response to VRChat-specific features:
+
+| Event | Parameters | When it fires |
+|-------|-----------|---------------|
+| `VideoStart` | -- | A VRC video player on this object starts playback |
+| `AvatarEyeHeightChanged` | -- | A player's avatar scale has changed |
+
+### Download events
+
+These fire when URL download operations complete. The compiler automatically injects a `result` parameter that you can access inside the handler:
+
+| Event | Implicit parameter | When it fires |
+|-------|-------------------|---------------|
+| `StringLoadSuccess` | `result: IVRCStringDownload` | A string download completed successfully |
+| `StringLoadError` | `result: IVRCStringDownload` | A string download failed |
+| `ImageLoadSuccess` | `result: IVRCImageDownload` | An image download completed successfully |
+| `ImageLoadError` | `result: IVRCImageDownload` | An image download failed |
+
+```rust
+pub let url: VRCUrl = null
+
+on Start {
+    VRCStringDownloader.LoadUrl(url)
+}
+
+on StringLoadSuccess {
+    let text: string = result.Result
+    log("Downloaded: {text}")
+}
+
+on StringLoadError {
+    let err: string = result.Error
+    error("Download failed: {err}")
+}
+```
+
+Note: Unlike most events, download events do not declare their parameters in the event signature. The `result` variable is automatically available inside the handler body. The compiler handles the parameter injection.
 
 ## How events compile
 

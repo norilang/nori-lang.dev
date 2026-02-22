@@ -219,3 +219,62 @@ event TimerDone {
 - `Time.deltaTime` in `on Update` creates real-time countdowns and timers.
 - Combine `sync` variables with `send ... to All` events for coordinated multiplayer logic.
 - Guard clauses (`if !is_running`) prevent duplicate or conflicting actions.
+
+## 6. Color-Changing Pickup
+
+A pickup object that changes its material color to a random color each time the player presses the use button. Demonstrates constructor calls, GetComponent, and Material property access.
+
+```rust
+pub let target: GameObject = null
+let target_material: Material = null
+
+on Start {
+    let renderer: MeshRenderer = target.GetComponent(MeshRenderer)
+    target_material = renderer.material
+}
+
+on PickupUseDown {
+    target_material.color = Color(Random.value, Random.value, Random.value, 1.0)
+}
+```
+
+**How it works:**
+
+- `pub let target: GameObject = null` -- A public reference to the GameObject whose color will change. Drag the target object into this field in the Inspector.
+- `let target_material: Material = null` -- Stores the material reference, fetched once in `Start` to avoid repeated lookups.
+- `target.GetComponent(MeshRenderer)` -- Retrieves the `MeshRenderer` component from the target GameObject. The type name `MeshRenderer` is passed directly (not as a string). The compiler resolves it to the correct Udon type reference.
+- `renderer.material` -- Accesses the material assigned to the renderer. This is the instance material, so changes affect only this object.
+- `Color(Random.value, Random.value, Random.value, 1.0)` -- Constructs a new `Color` value with random red, green, and blue components. `Random.value` returns a `float` between 0.0 and 1.0. The fourth argument is alpha (1.0 = fully opaque). This is a constructor call -- it looks like a function call but creates a new `Color` value.
+
+**Key concepts:**
+- Constructor calls like `Color(r, g, b, a)` create new value type instances.
+- `GetComponent(TypeName)` retrieves components using a type argument, not a string.
+- `Random.value` returns a random `float` between 0.0 and 1.0.
+- Cache component references in `Start` instead of looking them up every frame.
+
+## 7. Player Follower
+
+An object that follows the local player's head position on the XZ plane, smoothly interpolating each frame. Demonstrates VR tracking data, constructor calls, and frame-rate-independent movement.
+
+```rust
+on Update {
+    let tracking: TrackingData = localPlayer.GetTrackingData(TrackingDataType.Head)
+    let head_pos: Vector3 = tracking.position
+    let target_pos: Vector3 = Vector3(head_pos.x, 0.0, head_pos.z)
+    transform.position = Vector3.Lerp(transform.position, target_pos, Time.deltaTime * 2.0)
+}
+```
+
+**How it works:**
+
+- `localPlayer.GetTrackingData(TrackingDataType.Head)` -- Gets the current tracking data for the local player's head. `TrackingDataType` is an enum with values `Head`, `LeftHand`, `RightHand`, and `Origin`. The method returns a `TrackingData` value containing both `position` and `rotation`.
+- `tracking.position` -- Extracts the `Vector3` position from the tracking data. In VR, this is the real-world position of the player's headset. On desktop, it corresponds to the camera position.
+- `Vector3(head_pos.x, 0.0, head_pos.z)` -- Constructs a new `Vector3` using the head's X and Z coordinates but with Y set to 0.0. This projects the position onto the ground plane so the follower stays at floor level.
+- `Vector3.Lerp(transform.position, target_pos, Time.deltaTime * 2.0)` -- Linearly interpolates between the object's current position and the target. The `Time.deltaTime * 2.0` factor creates smooth movement that is frame-rate independent. Higher values make the object follow faster.
+
+**Key concepts:**
+- `TrackingDataType` is an enum for specifying which body part to track.
+- `GetTrackingData()` returns a `TrackingData` value with `.position` and `.rotation` properties.
+- `Vector3(x, y, z)` constructs a new vector from individual components.
+- `Vector3.Lerp()` with `Time.deltaTime` creates smooth, frame-rate-independent movement.
+- Projecting to the XZ plane (setting Y to 0.0) is a common pattern for ground-level following.

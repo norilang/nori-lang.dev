@@ -219,3 +219,62 @@ event TimerDone {
 - `on Update` 内の `Time.deltaTime` でリアルタイムのカウントダウンやタイマーを作成できます。
 - `sync` 変数と `send ... to All` イベントを組み合わせて、連携したマルチプレイヤーロジックを実現します。
 - ガード句（`if !is_running`）で重複や競合するアクションを防ぎます。
+
+## 6. カラー変更ピックアップ
+
+プレイヤーがUseボタンを押すたびにマテリアルの色をランダムに変更するピックアップオブジェクトです。コンストラクタ呼び出し、GetComponent、Materialプロパティへのアクセスを実演します。
+
+```rust
+pub let target: GameObject = null
+let target_material: Material = null
+
+on Start {
+    let renderer: MeshRenderer = target.GetComponent(MeshRenderer)
+    target_material = renderer.material
+}
+
+on PickupUseDown {
+    target_material.color = Color(Random.value, Random.value, Random.value, 1.0)
+}
+```
+
+**仕組み：**
+
+- `pub let target: GameObject = null` -- 色を変更する対象のGameObjectへのパブリック参照です。Inspectorでこのフィールドに対象オブジェクトをドラッグします。
+- `let target_material: Material = null` -- マテリアル参照を保持します。`Start` で一度だけ取得することで、繰り返しの検索を避けます。
+- `target.GetComponent(MeshRenderer)` -- 対象のGameObjectから `MeshRenderer` コンポーネントを取得します。型名 `MeshRenderer` は（文字列ではなく）直接渡されます。コンパイラがそれを正しいUdon型参照に解決します。
+- `renderer.material` -- レンダラーに割り当てられたマテリアルにアクセスします。これはインスタンスマテリアルなので、変更はこのオブジェクトにのみ影響します。
+- `Color(Random.value, Random.value, Random.value, 1.0)` -- ランダムな赤、緑、青のコンポーネントで新しい `Color` 値を構築します。`Random.value` は0.0から1.0の間の `float` を返します。4番目の引数はアルファ値（1.0 = 完全に不透明）です。これはコンストラクタ呼び出しで、関数呼び出しのように見えますが新しい `Color` 値を作成します。
+
+**主要な概念：**
+- `Color(r, g, b, a)` のようなコンストラクタ呼び出しで新しい値型インスタンスを作成します。
+- `GetComponent(TypeName)` は文字列ではなく型引数を使ってコンポーネントを取得します。
+- `Random.value` は0.0から1.0の間のランダムな `float` を返します。
+- フレームごとに検索する代わりに、`Start` でコンポーネント参照をキャッシュしましょう。
+
+## 7. プレイヤーフォロワー
+
+ローカルプレイヤーの頭の位置をXZ平面上で追跡し、毎フレームスムーズに補間するオブジェクトです。VRトラッキングデータ、コンストラクタ呼び出し、フレームレート非依存の移動を実演します。
+
+```rust
+on Update {
+    let tracking: TrackingData = localPlayer.GetTrackingData(TrackingDataType.Head)
+    let head_pos: Vector3 = tracking.position
+    let target_pos: Vector3 = Vector3(head_pos.x, 0.0, head_pos.z)
+    transform.position = Vector3.Lerp(transform.position, target_pos, Time.deltaTime * 2.0)
+}
+```
+
+**仕組み：**
+
+- `localPlayer.GetTrackingData(TrackingDataType.Head)` -- ローカルプレイヤーの頭の現在のトラッキングデータを取得します。`TrackingDataType` は `Head`、`LeftHand`、`RightHand`、`Origin` の値を持つ列挙型です。メソッドは `position` と `rotation` の両方を含む `TrackingData` 値を返します。
+- `tracking.position` -- トラッキングデータから `Vector3` の位置を抽出します。VRではプレイヤーのヘッドセットの実際の位置です。デスクトップではカメラの位置に対応します。
+- `Vector3(head_pos.x, 0.0, head_pos.z)` -- 頭のXとZ座標を使用し、Yを0.0に設定して新しい `Vector3` を構築します。これにより位置が地面の平面に射影され、フォロワーが床レベルに留まります。
+- `Vector3.Lerp(transform.position, target_pos, Time.deltaTime * 2.0)` -- オブジェクトの現在位置と目標位置の間を線形補間します。`Time.deltaTime * 2.0` の係数によりフレームレート非依存のスムーズな移動が実現されます。値を大きくするとオブジェクトの追従が速くなります。
+
+**主要な概念：**
+- `TrackingDataType` はトラッキングする体の部位を指定するための列挙型です。
+- `GetTrackingData()` は `.position` と `.rotation` プロパティを持つ `TrackingData` 値を返します。
+- `Vector3(x, y, z)` は個別のコンポーネントから新しいベクトルを構築します。
+- `Vector3.Lerp()` と `Time.deltaTime` でスムーズなフレームレート非依存の移動を作成します。
+- XZ平面への射影（Yを0.0に設定）は地面レベルの追従でよく使われるパターンです。

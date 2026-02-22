@@ -41,6 +41,11 @@ The most commonly used primitives are `bool`, `int`, `float`, and `string`. Use 
 | `AudioSource` | `UnityEngineAudioSource` | Audio playback component |
 | `Animator` | `UnityEngineAnimator` | Animation controller |
 | `Collision` | `UnityEngineCollision` | Collision event data |
+| `Material` | `UnityEngineMaterial` | Material for rendering (color, shader properties) |
+| `Renderer` | `UnityEngineRenderer` | Base renderer component |
+| `LineRenderer` | `UnityEngineLineRenderer` | Renders lines in 3D space |
+| `ConstantForce` | `UnityEngineConstantForce` | Applies constant physics force |
+| `Component` | `UnityEngineComponent` | Base class for all components |
 
 ## VRChat types
 
@@ -49,8 +54,73 @@ The most commonly used primitives are `bool`, `int`, `float`, and `string`. Use 
 | `Player` | `VRCSDKBaseVRCPlayerApi` | A VRChat player. Use `localPlayer` for the local player. |
 | `SerializationResult` | `VRCSDKBaseVRCSerializationResult` | Result of a serialization operation |
 | `UdonBehaviour` | `VRCUdonUdonBehaviour` | A reference to another UdonBehaviour |
+| `VRCObjectPool` | `VRCSDK3ComponentsVRCObjectPool` | Pool of reusable GameObjects |
+| `VRCObjectSync` | `VRCSDK3ComponentsVRCObjectSync` | Syncs object position/rotation across network |
+| `VRCAvatarPedestal` | `VRCSDK3ComponentsVRCAvatarPedestal` | Avatar pedestal for trying avatars |
+| `VRCPickup` | `VRCSDK3ComponentsVRCPickup` | Pickupable object component |
+| `VRCVideoPlayer` | `VRCSDK3VideoComponentsBaseBaseVRCVideoPlayer` | Video player component |
+| `VRCUrlInputField` | `VRCSDK3ComponentsVRCUrlInputField` | URL input field component |
+| `VRCUrl` | `VRCSDKBaseVRCUrl` | URL value type for video/download URLs |
+| `VRCImageDownloader` | `VRCSDK3ImageVRCImageDownloader` | Downloads images from URLs |
+| `TextureInfo` | `VRCSDK3ImageTextureInfo` | Texture download configuration |
+| `TrackingData` | `VRCSDKBaseVRCPlayerApiTrackingData` | VR tracking position and rotation data |
+| `IVRCStringDownload` | `VRCSDK3StringLoadingIVRCStringDownload` | String download result (has `.Result`, `.Error`, `.ErrorCode` properties) |
+| `IVRCImageDownload` | `VRCSDK3ImageIVRCImageDownload` | Image download result (has `.Error`, `.ErrorMessage` properties) |
 
 `Player` is the type you will use most often for VRChat-specific logic. It provides properties like `displayName`, `isLocal`, and `isMaster`.
+
+## UI types
+
+Unity's built-in UI components are available for creating in-world interfaces:
+
+| Nori type | Udon type | Key property | Description |
+|-----------|-----------|--------------|-------------|
+| `UIText` | `UnityEngineUIText` | `.text: string` | Displays text in the UI |
+| `UIToggle` | `UnityEngineUIToggle` | `.isOn: bool` | Checkbox / toggle switch |
+| `UISlider` | `UnityEngineUISlider` | `.value: float` | Numeric slider (0.0 to 1.0 by default) |
+| `UIDropdown` | `UnityEngineUIDropdown` | `.value: int` | Dropdown menu (value is the selected index) |
+| `UIInputField` | `UnityEngineUIInputField` | `.text: string` | Text input field |
+
+```rust
+pub let label: UIText = null
+pub let volume_slider: UISlider = null
+
+on Start {
+    label.text = "Hello!"
+    let vol: float = volume_slider.value
+    log("Volume: {vol}")
+}
+```
+
+These correspond to Unity's `UnityEngine.UI` namespace. Drag UI components from your Canvas into the Inspector fields.
+
+## Enum types
+
+Nori supports several built-in enum types from Unity and VRChat. Access enum values using the `Type.Value` syntax:
+
+| Nori type | Values | Description |
+|-----------|--------|-------------|
+| `KeyCode` | `KeyCode.Space`, `KeyCode.W`, `KeyCode.Return`, `KeyCode.Escape`, ... | Keyboard key constants |
+| `TrackingDataType` | `TrackingDataType.Head`, `.LeftHand`, `.RightHand`, `.Origin` | VR tracking points |
+| `PickupHand` | `PickupHand.Left`, `PickupHand.Right` | VR hand identifier |
+
+```rust
+on Update {
+    if Input.GetKeyDown(KeyCode.Space) {
+        log("Space pressed!")
+    }
+}
+```
+
+```rust
+on Update {
+    let tracking: TrackingData = localPlayer.GetTrackingData(TrackingDataType.Head)
+    let head_pos: Vector3 = tracking.position
+    log("Head at: {head_pos}")
+}
+```
+
+You cannot define your own enum types in Nori. Only the enums recognized by the Udon VM are available.
 
 ## Array types
 
@@ -124,6 +194,12 @@ Some types are used only for their static properties and methods. You never crea
 | `Vector4` | Vector4 statics | -- |
 | `Quaternion` | Quaternion statics | `Quaternion.identity` |
 | `Color` | Color statics | -- |
+| `Random` | Random values | `Random.value`, `Random.Range()`, `Random.ColorHSV()` |
+| `Input` | Keyboard input | `Input.GetKeyDown()`, `Input.GetKey()`, `Input.GetKeyUp()` |
+| `String` | String utilities | `String.Format()`, `String.Concat()` |
+| `Utilities` | VRChat utilities | `Utilities.IsValid()` |
+| `VRCPlayerApi` | Player API statics | `VRCPlayerApi.GetPlayers()` |
+| `VRCStringDownloader` | String downloads | `VRCStringDownloader.LoadUrl()` |
 
 ```rust
 on Update {

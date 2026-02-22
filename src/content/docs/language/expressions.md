@@ -223,6 +223,77 @@ for i in 0..10 {
 
 The range `0..10` produces values from 0 up to but not including 10. See [Control Flow](/language/control-flow/) for details.
 
+## Cast expressions
+
+Use the `as` keyword to explicitly convert between numeric types:
+
+```rust
+let server_time: double = Networking.GetServerTimeInSeconds()
+let t: float = server_time as float
+```
+
+Cast expressions convert between `int`, `float`, and `double`. This is useful when a method returns a wider type than you need:
+
+```rust
+let big: double = 3.14159
+let small: float = big as float
+let whole: int = small as int
+```
+
+Casts between incompatible types (e.g., `string as int`) produce a compile error.
+
+## Constructor calls
+
+Create new instances of value types by calling the type name as a function:
+
+```rust
+let c: Color = Color(0.3, 1.0, 0.0, 1.0)
+let v: Vector3 = Vector3(1.0, 2.0, 3.0)
+```
+
+The following constructors are available:
+
+| Constructor | Parameters | Description |
+|-------------|-----------|-------------|
+| `Color(r, g, b, a)` | Four `float` values | RGBA color (each 0.0 to 1.0) |
+| `Vector2(x, y)` | Two `float` values | 2D vector |
+| `Vector3(x, y, z)` | Three `float` values | 3D vector |
+| `Vector4(x, y, z, w)` | Four `float` values | 4D vector |
+| `Quaternion(x, y, z, w)` | Four `float` values | Rotation quaternion |
+
+```rust
+let red: Color = Color(1.0, 0.0, 0.0, 1.0)
+let origin: Vector3 = Vector3(0.0, 0.0, 0.0)
+let offset: Vector2 = Vector2(0.5, 0.5)
+```
+
+Note: These look like function calls but are compiled to constructor externs. You cannot construct arbitrary types -- only the value types listed above.
+
+## GetComponent
+
+Retrieve components from GameObjects by passing a type name as the argument:
+
+```rust
+let renderer: MeshRenderer = gameObject.GetComponent(MeshRenderer)
+let line: LineRenderer = gameObject.GetComponent(LineRenderer)
+```
+
+The type argument is not a string -- it is the actual type name. The compiler resolves it to the correct Udon type reference. The return type is `Component`, so you typically assign the result to a variable of the specific component type.
+
+`GetComponentsInChildren` works the same way and returns a `Component[]` array.
+
+## Array construction
+
+Create arrays of a specific size using the type-and-size syntax:
+
+```rust
+let flags: bool[] = bool[10]
+let positions: Vector3[] = Vector3[50]
+let names: string[] = string[5]
+```
+
+This creates an array of the given type with the specified number of elements. All elements are initialized to their default value (`false` for `bool`, `0` for `int`, `null` for reference types).
+
 ## Built-in shortcuts
 
 Nori provides several shortcuts that are always available without any declaration:
@@ -235,6 +306,8 @@ Nori provides several shortcuts that are always available without any declaratio
 | `log(value)` | `Debug.Log(value)` | void |
 | `warn(value)` | `Debug.LogWarning(value)` | void |
 | `error(value)` | `Debug.LogError(value)` | void |
+| `IsValid(reference)` | `Utilities.IsValid(reference)` | `bool` |
+| `SendCustomEventDelayedSeconds(name, delay, timing)` | Sends a custom event after a delay | `void` |
 
 ```rust
 on Start {
@@ -299,9 +372,9 @@ Use nested `if` statements for guard conditions.
 
 Assignment is a statement, not an expression. You cannot write `let x: int = y = 5`. Each assignment is its own statement.
 
-**Using `+` to concatenate non-strings:**
+**Mixing types with `+`:**
 
-The `+` operator for strings only works when both sides are strings. Use string interpolation to embed non-string values: `"Score: {score}"` instead of `"Score: " + score`.
+The `+` operator automatically converts non-string operands to strings using `ToString()` when the other side is a string. While `"Score: " + score` works, string interpolation is preferred for readability: `"Score: {score}"`.
 
 ## See also
 

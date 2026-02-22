@@ -223,6 +223,77 @@ for i in 0..10 {
 
 範囲`0..10`は0から10を含まない値を生成します。詳細は[制御フロー](/ja/language/control-flow/)を参照してください。
 
+## キャスト式
+
+`as` キーワードを使って数値型間を明示的に変換します：
+
+```rust
+let server_time: double = Networking.GetServerTimeInSeconds()
+let t: float = server_time as float
+```
+
+キャスト式は`int`、`float`、`double`間の変換を行います。メソッドが必要な型より広い型を返す場合に便利です：
+
+```rust
+let big: double = 3.14159
+let small: float = big as float
+let whole: int = small as int
+```
+
+互換性のない型間のキャスト（例：`string as int`）はコンパイルエラーになります。
+
+## コンストラクタ呼び出し
+
+型名を関数のように呼び出して、値型の新しいインスタンスを作成します：
+
+```rust
+let c: Color = Color(0.3, 1.0, 0.0, 1.0)
+let v: Vector3 = Vector3(1.0, 2.0, 3.0)
+```
+
+以下のコンストラクタが利用可能です：
+
+| コンストラクタ | パラメータ | 説明 |
+|-------------|-----------|-------------|
+| `Color(r, g, b, a)` | 4つの`float`値 | RGBAカラー（各0.0～1.0） |
+| `Vector2(x, y)` | 2つの`float`値 | 2Dベクトル |
+| `Vector3(x, y, z)` | 3つの`float`値 | 3Dベクトル |
+| `Vector4(x, y, z, w)` | 4つの`float`値 | 4Dベクトル |
+| `Quaternion(x, y, z, w)` | 4つの`float`値 | 回転クォータニオン |
+
+```rust
+let red: Color = Color(1.0, 0.0, 0.0, 1.0)
+let origin: Vector3 = Vector3(0.0, 0.0, 0.0)
+let offset: Vector2 = Vector2(0.5, 0.5)
+```
+
+注意：これらは関数呼び出しのように見えますが、コンストラクタexternにコンパイルされます。任意の型を構築することはできません -- 上記の値型のみ構築可能です。
+
+## GetComponent
+
+型名を引数として渡して、GameObjectからコンポーネントを取得します：
+
+```rust
+let renderer: MeshRenderer = gameObject.GetComponent(MeshRenderer)
+let line: LineRenderer = gameObject.GetComponent(LineRenderer)
+```
+
+型引数は文字列ではなく、実際の型名です。コンパイラがそれを正しいUdon型参照に解決します。戻り値の型は `Component` なので、通常は特定のコンポーネント型の変数に結果を代入します。
+
+`GetComponentsInChildren` も同様に動作し、`Component[]` 配列を返します。
+
+## 配列の構築
+
+型名とサイズの構文を使って、特定のサイズの配列を作成します：
+
+```rust
+let flags: bool[] = bool[10]
+let positions: Vector3[] = Vector3[50]
+let names: string[] = string[5]
+```
+
+これにより、指定された型の指定された要素数の配列が作成されます。すべての要素はデフォルト値で初期化されます（`bool`は`false`、`int`は`0`、参照型は`null`）。
+
 ## 組み込みショートカット
 
 Noriは宣言なしで常に利用可能なショートカットをいくつか提供しています：
@@ -235,6 +306,8 @@ Noriは宣言なしで常に利用可能なショートカットをいくつか�
 | `log(value)` | `Debug.Log(value)` | void |
 | `warn(value)` | `Debug.LogWarning(value)` | void |
 | `error(value)` | `Debug.LogError(value)` | void |
+| `IsValid(reference)` | `Utilities.IsValid(reference)` | `bool` |
+| `SendCustomEventDelayedSeconds(name, delay, timing)` | 遅延後にカスタムイベントを送信 | `void` |
 
 ```rust
 on Start {
@@ -299,9 +372,9 @@ if index >= 0 && items[index] == target {
 
 代入は文であり、式ではありません。`let x: int = y = 5`のように書くことはできません。各代入は独立した文です。
 
-**`+`で文字列以外を連結する：**
+**`+`での型の混在：**
 
-文字列用の`+`演算子は両辺が文字列の場合にのみ機能します。文字列以外の値を埋め込むには文字列補間を使用してください：`"Score: " + score`ではなく`"Score: {score}"`と書きます。
+`+`演算子は、片方が文字列の場合、文字列でないオペランドを`ToString()`で自動的に文字列に変換します。`"Score: " + score`は動作しますが、可読性の観点から文字列補間が推奨されます：`"Score: {score}"`。
 
 ## 関連項目
 
